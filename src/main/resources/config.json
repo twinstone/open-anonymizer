@@ -1,0 +1,32 @@
+{
+  "in_connection": {
+    "data_source_type": "MONGO",
+    "host": "localhost",
+    "port": 27017,
+    "database": "users_1"
+  },
+  "out_connection": {
+    "data_source_type": "MONGO",
+    "host": "localhost",
+    "port": 27017,
+    "database": "users_2"
+  },
+  "entities": [
+    {
+      "name": "user",
+      "source": "users",
+      "fields": [
+        {
+          "name": "username",
+          "type": "STRING",
+          "dataType": "FULL_NAME"
+        },
+        {
+          "name": "email",
+          "type": "STRING",
+          "dataType": "EMAIL"
+        }
+      ]
+    }
+  ]
+}

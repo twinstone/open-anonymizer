@@ -1,5 +1,6 @@
 package application.datasource.mongo;
 
+import application.datasource.AbstractDataSource;
 import application.datasource.DataSource;
 import application.model.describer.EntityDescriber;
 import application.model.wrapper.DataSet;
@@ -8,7 +9,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 
-public class MongoDataSource extends DataSource {
+public class MongoDataSource extends AbstractDataSource implements DataSource {
 
     private final MongoDatabase database;
 

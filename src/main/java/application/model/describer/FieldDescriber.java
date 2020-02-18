@@ -1,6 +1,5 @@
 package application.model.describer;
 
-import application.model.FieldDataType;
 import application.model.FieldType;
 
 import java.io.Serializable;
@@ -11,7 +10,7 @@ public class FieldDescriber implements Serializable, Describer {
 
     private String name;
     private FieldType type;
-    private FieldDataType dataType;
+    private String anonymizationClass;
     private boolean allowsNull;
     private boolean unique;
 
@@ -31,12 +30,12 @@ public class FieldDescriber implements Serializable, Describer {
         this.type = type;
     }
 
-    public FieldDataType getDataType() {
-        return dataType;
+    public String getAnonymizationClass() {
+        return anonymizationClass;
     }
 
-    public void setDataType(FieldDataType dataType) {
-        this.dataType = dataType;
+    public void setAnonymizationClass(String anonymizationClass) {
+        this.anonymizationClass = anonymizationClass;
     }
 
     public boolean isAllowsNull() {

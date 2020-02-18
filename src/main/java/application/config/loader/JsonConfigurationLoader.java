@@ -1,6 +1,7 @@
 package application.config.loader;
 
 import application.config.Configuration;
+import application.datasource.AbstractDataSource;
 import application.datasource.DataSource;
 import application.datasource.DataSourceFactory;
 import application.model.describer.EntityDescriber;

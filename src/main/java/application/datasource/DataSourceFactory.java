@@ -1,26 +1,32 @@
 package application.datasource;
 
-import application.datasource.mongo.MongoBuilder;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.lang3.Validate;
 
+import java.lang.reflect.InvocationTargetException;
+
 public class DataSourceFactory {
 
-    private static final String DATA_SOURCE_TYPE = "data_source_type";
+    private static final String DATA_SOURCE = "data_source";
 
     public static DataSource getDataSourceFromJson(JsonNode node) {
         Validate.notNull(node, "Json dsnk");
-        Validate.notNull(node.get(DATA_SOURCE_TYPE), "Could not recognize source type. Missing configuration value.");
-        DataSourceType type = DataSourceType.valueOf(node.get(DATA_SOURCE_TYPE).textValue());
-        return buildDataSourceByType(type, node);
+        Validate.notNull(node.get(DATA_SOURCE), "Could not recognize source type. Missing configuration value.");
+        try {
+            //TODO refactor this
+            return buildDataSourceByClazz(node.get(DATA_SOURCE).textValue(), node);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
-    private static DataSource buildDataSourceByType(DataSourceType type, JsonNode node) {
-        switch (type) {
-            case MONGO:
-                return new MongoBuilder().fromJson(node);
-            default:
-                throw new IllegalArgumentException("Could not create data source for type " + type);
+    private static DataSource buildDataSourceByClazz(String clazz, JsonNode node)
+            throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        Class<?> builderClass = Class.forName(clazz);
+        if(builderClass.isAssignableFrom(DataSourceBuilder.class)) {
+            DataSourceBuilder builder = (DataSourceBuilder) builderClass.getConstructor().newInstance();
+            return builder.fromJson(node);
         }
+        throw new IllegalArgumentException();
     }
 }

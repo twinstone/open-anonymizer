@@ -1,12 +1,12 @@
 {
   "in_connection": {
-    "data_source_type": "MONGO",
+    "data_source": "MONGO",
     "host": "localhost",
     "port": 27017,
     "database": "users_1"
   },
   "out_connection": {
-    "data_source_type": "MONGO",
+    "data_source": "MONGO",
     "host": "localhost",
     "port": 27017,
     "database": "users_2"
@@ -19,12 +19,14 @@
         {
           "name": "username",
           "type": "STRING",
-          "dataType": "FULL_NAME"
+          "anonymizationClass": "FULL_NAME",
+          "anonymizationStrategy": "DELETE"
         },
         {
           "name": "email",
           "type": "STRING",
-          "dataType": "EMAIL"
+          "anonymizationClass": "EMAIL",
+          "anonymizationStrategy": "RANDOM"
         }
       ]
     }

@@ -3,30 +3,22 @@ package application.datasource;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.lang3.Validate;
 
-import java.lang.reflect.InvocationTargetException;
-
 public class DataSourceFactory {
 
-    private static final String DATA_SOURCE = "data_source";
+    private static final String DATA_SOURCE = "data_source_builder";
 
-    public static DataSource getDataSourceFromJson(JsonNode node) {
-        Validate.notNull(node, "Json dsnk");
+    public static DataSource getDataSourceFromJson(final JsonNode node) {
+        Validate.notNull(node, "Json node must be not null.");
         Validate.notNull(node.get(DATA_SOURCE), "Could not recognize source type. Missing configuration value.");
         try {
-            //TODO refactor this
-            return buildDataSourceByClazz(node.get(DATA_SOURCE).textValue(), node);
+            Class<?> builderClass = Class.forName(node.get(DATA_SOURCE).textValue());
+            if (DataSourceBuilder.class.isAssignableFrom(builderClass)) {
+                DataSourceBuilder builder = (DataSourceBuilder) builderClass.getConstructor().newInstance();
+                return builder.fromJson(node);
+            }
+            throw new IllegalArgumentException("Could not build DataSource. " + builderClass + " does not implements " + DataSourceBuilder.class);
         } catch (Exception e) {
             return null;
         }
-    }
-
-    private static DataSource buildDataSourceByClazz(String clazz, JsonNode node)
-            throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
-        Class<?> builderClass = Class.forName(clazz);
-        if(builderClass.isAssignableFrom(DataSourceBuilder.class)) {
-            DataSourceBuilder builder = (DataSourceBuilder) builderClass.getConstructor().newInstance();
-            return builder.fromJson(node);
-        }
-        throw new IllegalArgumentException();
     }
 }

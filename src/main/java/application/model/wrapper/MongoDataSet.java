@@ -1,12 +1,16 @@
 package application.model.wrapper;
 
 import application.model.describer.EntityDescriber;
+import application.model.mapper.EntityWrapperMapper;
+import application.model.mapper.MongoEntityMapper;
 import com.mongodb.client.MongoIterable;
 import org.bson.Document;
 
 import java.util.Iterator;
 
 public class MongoDataSet implements DataSet {
+
+    private static final EntityWrapperMapper<Document> mapper = new MongoEntityMapper();
 
     private final MongoIterable<Document> collection;
     private final Iterator<Document> iterator;
@@ -25,6 +29,6 @@ public class MongoDataSet implements DataSet {
 
     @Override
     public EntityWrapper next() {
-        return new MongoEntityWrapper(iterator.next());
+        return mapper.getFromEntity(iterator.next(), describer);
     }
 }

@@ -1,5 +1,6 @@
 package application.model.describer;
 
+import application.core.anonymizer.AnonymizationStrategy;
 import application.model.FieldType;
 
 import java.io.Serializable;
@@ -11,6 +12,7 @@ public class FieldDescriber implements Serializable, Describer {
     private String name;
     private FieldType type;
     private String anonymizationClass;
+    private AnonymizationStrategy anonymizationStrategy;
     private boolean allowsNull;
     private boolean unique;
 
@@ -36,6 +38,14 @@ public class FieldDescriber implements Serializable, Describer {
 
     public void setAnonymizationClass(String anonymizationClass) {
         this.anonymizationClass = anonymizationClass;
+    }
+
+    public AnonymizationStrategy getAnonymizationStrategy() {
+        return anonymizationStrategy;
+    }
+
+    public void setAnonymizationStrategy(AnonymizationStrategy anonymizationStrategy) {
+        this.anonymizationStrategy = anonymizationStrategy;
     }
 
     public boolean isAllowsNull() {

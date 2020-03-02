@@ -18,7 +18,6 @@ public class MongoEntityMapper implements EntityWrapperMapper<Document> {
 
     @Override
     public Document getFromWrapper(EntityWrapper wrapper) {
-        Document document = new Document();
-        return null;
+        return new Document(wrapper.getEntityAsMap());
     }
 }

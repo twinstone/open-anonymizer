@@ -3,6 +3,7 @@ package application.model.wrapper;
 import application.model.describer.EntityDescriber;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -57,5 +58,10 @@ public class EntityWrapperImpl implements EntityWrapper, Serializable {
     @Override
     public EntityDescriber describeEntity() {
         return describer;
+    }
+
+    @Override
+    public Map<String, Object> getEntityAsMap() {
+        return Collections.unmodifiableMap(entityAsMap);
     }
 }

@@ -1,15 +1,19 @@
 package application.datasource.mongo;
 
-import application.datasource.AbstractDataSource;
 import application.datasource.DataSource;
 import application.model.describer.EntityDescriber;
+import application.model.mapper.EntityWrapperMapper;
+import application.model.mapper.MongoEntityMapper;
 import application.model.wrapper.DataSet;
+import application.model.wrapper.EntityWrapper;
 import application.model.wrapper.MongoDataSet;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 
-public class MongoDataSource extends AbstractDataSource implements DataSource {
+public class MongoDataSource implements DataSource {
+
+    private static final EntityWrapperMapper<Document> mapper = new MongoEntityMapper();
 
     private final MongoDatabase database;
 
@@ -24,12 +28,12 @@ public class MongoDataSource extends AbstractDataSource implements DataSource {
     }
 
     @Override
-    public void saveDataSet(DataSet dataSet, EntityDescriber describer) {
-        try {
-            MongoCollection<Document> collection = database.getCollection(describer.getSource());
-            if (collection == null) {
-            }
-        } catch (Exception e) {
+    public void saveEntity(EntityWrapper wrapper) {
+        MongoCollection<Document> collection = database.getCollection(wrapper.describeEntity().getSource());
+        if (collection == null) {
+            database.createCollection(wrapper.describeEntity().getSource());
+            collection = database.getCollection(wrapper.describeEntity().getSource());
         }
+        collection.insertOne(mapper.getFromWrapper(wrapper));
     }
 }

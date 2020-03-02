@@ -2,6 +2,8 @@ package application.model.wrapper;
 
 import application.model.describer.EntityDescriber;
 
+import java.util.Map;
+
 public interface EntityWrapper {
 
     Object getValue(final String field);
@@ -13,4 +15,6 @@ public interface EntityWrapper {
     EntityWrapper delete(final String field);
 
     EntityDescriber describeEntity();
+
+    Map<String, Object> getEntityAsMap();
 }

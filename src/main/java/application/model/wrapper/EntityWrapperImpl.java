@@ -23,6 +23,14 @@ public class EntityWrapperImpl implements EntityWrapper, Serializable {
     }
 
     @Override
+    public Object getValue(String field) {
+        if (!entityAsMap.containsKey(field)) {
+            throw new IllegalArgumentException("Could not find field with name: " + field);
+        }
+        return entityAsMap.get(field);
+    }
+
+    @Override
     public EntityWrapper insert(String field, Object value) {
         if (entityAsMap.containsKey(field)) {
             throw new IllegalArgumentException(String.format("Could not insert field with name [%s], already inserted.", field));
@@ -37,6 +45,12 @@ public class EntityWrapperImpl implements EntityWrapper, Serializable {
             throw new IllegalArgumentException(String.format("Could not update field with name [%s], not found.", field));
         }
         entityAsMap.put(field, value);
+        return this;
+    }
+
+    @Override
+    public EntityWrapper delete(String field) {
+        entityAsMap.remove(field);
         return this;
     }
 

@@ -1,0 +1,39 @@
+{
+  "in_connection": {
+    "data_source_builder": "application.datasource.mongo.MongoBuilder",
+    "host": "localhost",
+    "port": 27017,
+    "database": "users_1"
+  },
+  "out_connection": {
+    "data_source_builder": "application.datasource.mongo.MongoBuilder",
+    "host": "localhost",
+    "port": 27017,
+    "database": "users_2"
+  },
+  "entities": [
+    {
+      "name": "user",
+      "source": "users",
+      "fields": [
+        {
+          "name": "username",
+          "type": "STRING",
+          "unique": false,
+          "allowsNull": true,
+          "anonymizationClass": "application.core.anonymizer.FirstNameAnonymizer",
+          "anonymizationStrategy": "DELETE"
+        },
+        {
+          "name": "email",
+          "type": "STRING",
+          "unique": true,
+          "anonymizationClass": "EMAIL",
+          "anonymizationStrategy": "RANDOM"
+        }
+      ]
+    }
+  ],
+  "locale": "en",
+  "dict_path": "F:/Bachelor/src/main/resources/dict"
+}

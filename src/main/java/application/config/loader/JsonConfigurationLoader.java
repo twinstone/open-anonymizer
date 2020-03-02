@@ -1,11 +1,9 @@
 package application.config.loader;
 
 import application.config.Configuration;
-import application.datasource.AbstractDataSource;
 import application.datasource.DataSource;
 import application.datasource.DataSourceFactory;
 import application.model.describer.EntityDescriber;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.Validate;
@@ -29,7 +27,7 @@ public class JsonConfigurationLoader implements ConfigurationLoader {
 
     @Override
     public Configuration readConfiguration(String filePath) {
-        Validate.notNull(filePath);
+        Validate.notEmpty(filePath, "Path to configuration file must be not null and not empty.");
         logger.info("Reading configuration from " + filePath);
         Configuration configuration = new Configuration();
         File config = new File(filePath);

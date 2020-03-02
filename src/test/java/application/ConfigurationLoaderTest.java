@@ -3,27 +3,32 @@ package application;
 import application.config.Configuration;
 import application.config.loader.ConfigurationLoader;
 import application.config.loader.JsonConfigurationLoader;
-import application.core.AnonymizationService;
-import application.datasource.DataSource;
-import application.model.wrapper.DataSet;
-import application.model.wrapper.EntityWrapper;
+import org.apache.log4j.xml.DOMConfigurator;
+import org.junit.Assert;
 import org.junit.Test;
+
+import java.net.URL;
 
 public class ConfigurationLoaderTest {
 
-    private final static String PATH = "F:/Bachelor/src/main/resources/config.json";
+    private final static URL PATH = ConfigurationLoaderTest.class.getClassLoader().getResource("config.json");
 
     @Test
     public void test() {
+        DOMConfigurator.configure("log4j.xml");
         ConfigurationLoader loader = new JsonConfigurationLoader();
-        Configuration configuration = loader.readConfiguration(PATH);
-        AnonymizationService service = new AnonymizationService();
-        DataSource dataSource = configuration.getInputSource();
-        DataSet dataSet = dataSource.readDataSet(configuration.getEntities().get(0));
-        while (dataSet.hasNext()) {
-            EntityWrapper wrapper = dataSet.next();
-            service.anonymizeEntity(wrapper, configuration);
-        }
+        Configuration configuration = loader.readConfiguration(PATH.getPath());
+        Assert.assertNotNull(configuration.getInputSource());
+        Assert.assertNotNull(configuration.getOutputSource());
+        Assert.assertNotNull(configuration.getEntities());
+        Assert.assertNotNull(configuration.getDictionaryPath());
+        Assert.assertNotNull(configuration.getLocale());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void emptyTest() {
+        ConfigurationLoader loader = new JsonConfigurationLoader();
+        loader.readConfiguration("");
     }
 
 }

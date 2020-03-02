@@ -5,11 +5,13 @@ import application.core.dict.DictionaryService;
 import application.model.describer.FieldDescriber;
 import application.model.wrapper.EntityWrapper;
 
+import java.util.UUID;
 
-public class FirstNameAnonymizer extends AbstractFieldAnonymizer implements Anonymizer {
+public class EmailAnonymizer extends AbstractFieldAnonymizer implements Anonymizer {
 
-    private static final String FILE_NAME = "first_name";
-    private static final String DEFAULT_FIRST_NAME = "Bob";
+    private static final String DOMAINS = "domains";
+    private static final String DEFAULT_DOMAIN = "default.com";
+    private static final String EMAIL = "%s@%s";
 
     @Override
     public void anonymize(EntityWrapper entity, FieldDescriber describer, Configuration configuration) {
@@ -18,6 +20,8 @@ public class FirstNameAnonymizer extends AbstractFieldAnonymizer implements Anon
 
     @Override
     protected void resolveRandomStrategy(EntityWrapper entity, FieldDescriber describer, Configuration configuration) {
-        entity.update(describer.getName(), DictionaryService.getDictionaryValue(configuration.getDictionaryPath(), FILE_NAME, configuration.getLocale()).orElse(DEFAULT_FIRST_NAME));
+        String domain = DictionaryService.getDictionaryValue(configuration.getDictionaryPath(), DOMAINS).orElse(DEFAULT_DOMAIN);
+        String uuid = UUID.randomUUID().toString();
+        entity.update(describer.getName(), String.format(EMAIL, uuid, domain));
     }
 }

@@ -16,16 +16,19 @@ public class DictionaryService {
     private static final String FILENAME = "%s/%s_%s.dict";
     private static Map<String, Dictionary> loadedDictionaries = new HashMap<>();
 
-    public static String getDictionaryValue(final String path, final String name, final Locale locale) {
+    public static Optional<String> getDictionaryValue(final String path, final String name) {
+        return getDictionaryValue(path, name, null);
+    }
+
+    public static Optional<String> getDictionaryValue(final String path, final String name, final Locale locale) {
         Validate.notEmpty(path, "Dictionaries path must be not null and not empty.");
         Validate.notEmpty(name, "File name must be not null and not empty.");
-        Validate.notNull(locale, "Locale must be not null.");
         if (loadedDictionaries.containsKey(name)) {
-            return loadedDictionaries.get(name).nextValue();
+            return Optional.of(loadedDictionaries.get(name).nextValue());
         }
-        Dictionary dictionary = loadDictionary(String.format(FILENAME, path, name, locale.getCountry()));
+        Dictionary dictionary = loadDictionary(String.format(FILENAME, path, name, locale == null ? "def" : locale.getLanguage()));
         loadedDictionaries.put(name, dictionary);
-        return dictionary.nextValue();
+        return Optional.of(dictionary.nextValue());
     }
 
     public static String getUniqueDictionaryValue(final String path, final String name, final Locale locale) {

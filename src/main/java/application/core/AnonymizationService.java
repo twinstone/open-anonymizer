@@ -1,5 +1,6 @@
 package application.core;
 
+import application.config.Aliases;
 import application.core.anonymizer.Anonymizer;
 import application.model.describer.FieldDescriber;
 import application.model.wrapper.EntityWrapper;
@@ -14,9 +15,9 @@ public class AnonymizationService {
         return entity;
     }
 
-    public EntityWrapper anonymizeField(EntityWrapper entity, FieldDescriber describer, application.config.Configuration configuration) {
+    private EntityWrapper anonymizeField(EntityWrapper entity, FieldDescriber describer, application.config.Configuration configuration) {
         try {
-            Class<?> anonClass = Class.forName(describer.getAnonymizationClass());
+            Class<?> anonClass = Class.forName(Aliases.tryFindAnonymizationClass(describer.getAnonymizationClass()));
             if (Anonymizer.class.isAssignableFrom(anonClass)) {
                 Anonymizer anonymizer = (Anonymizer) anonClass.getConstructor().newInstance();
                 Configuration config = new Configuration(configuration.getLocale(), configuration.getDictionaryPath(), describer.getAnonymizationStrategy(), null);

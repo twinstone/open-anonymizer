@@ -19,6 +19,8 @@
         {
           "name": "username",
           "type": "STRING",
+          "unique": false,
+          "allowsNull": true,
           "anonymizationClass": "application.core.anonymizer.FirstNameAnonymizer",
           "anonymizationStrategy": "DELETE"
         },
@@ -26,12 +28,12 @@
           "name": "email",
           "type": "STRING",
           "unique" : true,
-          "anonymizationClass": "application.core.anonymizer.FirstNameAnonymizer",
+          "anonymizationClass": "EMAIL",
           "anonymizationStrategy": "RANDOM"
         }
       ]
     }
   ],
   "locale" : "en",
-  "dict_path" : "/dict"
+  "dict_path": "F:/Bachelor/src/main/resources/dict"
 }

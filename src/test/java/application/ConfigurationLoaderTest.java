@@ -22,7 +22,7 @@ public class ConfigurationLoaderTest {
         DataSet dataSet = dataSource.readDataSet(configuration.getEntities().get(0));
         while (dataSet.hasNext()) {
             EntityWrapper wrapper = dataSet.next();
-            service.anonymizeEntity(wrapper);
+            service.anonymizeEntity(wrapper, configuration);
         }
     }
 

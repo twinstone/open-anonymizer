@@ -25,10 +25,13 @@
         {
           "name": "email",
           "type": "STRING",
+          "unique" : true,
           "anonymizationClass": "application.core.anonymizer.FirstNameAnonymizer",
           "anonymizationStrategy": "RANDOM"
         }
       ]
     }
-  ]
+  ],
+  "locale" : "en",
+  "dict_path" : "/dict"
 }

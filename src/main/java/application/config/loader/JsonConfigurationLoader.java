@@ -14,12 +14,15 @@ import org.apache.log4j.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Locale;
 
 public class JsonConfigurationLoader implements ConfigurationLoader {
 
     private static final ObjectMapper mapper = new ObjectMapper();
     private static final Logger logger = Logger.getLogger(JsonConfigurationLoader.class);
 
+    private static final String LOCALE = "locale";
+    private static final String DICTIONARY_PATH = "dict_path";
     private static final String IN_CONNECTION = "in_connection";
     private static final String OUT_CONNECTION = "out_connection";
     private static final String ENTITIES = "entities";
@@ -51,8 +54,12 @@ public class JsonConfigurationLoader implements ConfigurationLoader {
                 EntityDescriber[] entities = mapper.convertValue(node.get(ENTITIES), EntityDescriber[].class);
                 configuration.setEntities(Arrays.asList(entities));
             }
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            if(node.hasNonNull(LOCALE)) {
+                configuration.setLocale(new Locale(node.get(LOCALE).textValue()));
+            }
+            if(node.hasNonNull(DICTIONARY_PATH)) {
+                configuration.setDictionaryPath(node.get(DICTIONARY_PATH).textValue());
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

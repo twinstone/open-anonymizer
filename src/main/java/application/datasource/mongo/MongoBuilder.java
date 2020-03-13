@@ -9,7 +9,7 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import org.apache.commons.lang3.Validate;
 
-public class MongoBuilder implements DataSourceBuilder<MongoDataSource> {
+public class MongoBuilder implements DataSourceBuilder<MongoDataSource, JsonNode> {
 
     private static final String HOST_PROPERTY = "host";
     private static final String PORT_PROPERTY = "port";
@@ -19,7 +19,7 @@ public class MongoBuilder implements DataSourceBuilder<MongoDataSource> {
     private static final String AUTH_DB_PROPERTY = "auth_db";
 
     @Override
-    public MongoDataSource fromJson(JsonNode node) {
+    public MongoDataSource fromSource(JsonNode node) {
         Validate.notNull(node, "Configuration json must be a value. ");
         ConnectionString connectionString = new ConnectionString(buildUri(node));
         MongoClientSettings settings = MongoClientSettings

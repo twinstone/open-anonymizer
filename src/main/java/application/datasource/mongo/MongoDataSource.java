@@ -36,4 +36,9 @@ public class MongoDataSource implements DataSource {
         }
         collection.insertOne(mapper.getFromWrapper(wrapper));
     }
+
+    @Override
+    public void updateEntity(EntityWrapper wrapper) {
+
+    }
 }

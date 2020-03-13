@@ -14,7 +14,7 @@ public class DataSourceFactory {
             Class<?> builderClass = Class.forName(node.get(DATA_SOURCE).textValue());
             if (DataSourceBuilder.class.isAssignableFrom(builderClass)) {
                 DataSourceBuilder builder = (DataSourceBuilder) builderClass.getConstructor().newInstance();
-                return builder.fromJson(node);
+                return builder.fromSource(node);
             }
             throw new IllegalArgumentException("Could not build DataSource. " + builderClass + " does not implements " + DataSourceBuilder.class);
         } catch (Exception e) {

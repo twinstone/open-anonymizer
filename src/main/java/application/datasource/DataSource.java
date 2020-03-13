@@ -8,4 +8,6 @@ public interface DataSource {
     DataSet readDataSet(EntityDescriber describer);
 
     void saveEntity(EntityWrapper wrapper);
+
+    void updateEntity(EntityWrapper wrapper);
 }

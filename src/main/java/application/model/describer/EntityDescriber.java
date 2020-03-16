@@ -1,6 +1,7 @@
 package application.model.describer;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 
 public class EntityDescriber implements Serializable, Describer {
@@ -33,5 +34,18 @@ public class EntityDescriber implements Serializable, Describer {
 
     public void setFields(List<FieldDescriber> fields) {
         this.fields = fields;
+    }
+
+    public boolean containsField(String name) {
+        for (FieldDescriber field : fields) {
+            if (field.getName().equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public List<String> getRelationEntitiesNames() {
+        return Collections.emptyList();
     }
 }

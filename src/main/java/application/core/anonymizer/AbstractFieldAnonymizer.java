@@ -5,6 +5,7 @@ import application.core.hash.HashService;
 import application.model.FieldType;
 import application.model.describer.FieldDescriber;
 import application.model.wrapper.EntityWrapper;
+import org.apache.commons.lang3.Validate;
 
 public abstract class AbstractFieldAnonymizer {
 
@@ -12,6 +13,7 @@ public abstract class AbstractFieldAnonymizer {
         if (describer.isUnique()) {
             throw new IllegalArgumentException("Could not set default value to field that is unique.");
         }
+        //todo another resolving default strategy
         entity.update(describer.getName(), describer.getDefaultValue());
     }
 
@@ -22,7 +24,9 @@ public abstract class AbstractFieldAnonymizer {
         entity.delete(describer.getName());
     }
 
-    protected void resolveRandomStrategy(EntityWrapper entity, FieldDescriber describer, Configuration configuration) {}
+    protected void resolveRandomStrategy(EntityWrapper entity, FieldDescriber describer, Configuration configuration) {
+        throw new UnsupportedOperationException();
+    }
 
     protected void resolveHashStrategy(EntityWrapper entity, FieldDescriber describer, Configuration configuration) {
         if (FieldType.STRING.equals(describer.getType())) {
@@ -31,7 +35,10 @@ public abstract class AbstractFieldAnonymizer {
         }
     }
 
-    protected void anonymize(EntityWrapper entity, FieldDescriber describer, Configuration configuration) {
+    public void anonymize(EntityWrapper entity, FieldDescriber describer, Configuration configuration) {
+        Validate.notNull(entity);
+        Validate.notNull(describer);
+        Validate.notNull(configuration);
         switch (configuration.getStrategy()) {
             case DEFAULT:
                 resolveDefaultStrategy(entity, describer, configuration);

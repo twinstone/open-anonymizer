@@ -8,12 +8,15 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
-public class DictionaryService {
+/**
+ *
+ */
+public final class DictionaryService {
 
     private static final Logger logger = Logger.getLogger(DictionaryService.class);
 
     private static final String DELIMITER = ";";
-    private static final String FILENAME = "%s/%s_%s.dict";
+    private static final String FILENAME = "%s/%s.dict";
     private static Map<String, Dictionary> loadedDictionaries = new HashMap<>();
 
     public static Optional<String> getDictionaryValue(final String path, final String name) {
@@ -23,16 +26,13 @@ public class DictionaryService {
     public static Optional<String> getDictionaryValue(final String path, final String name, final Locale locale) {
         Validate.notEmpty(path, "Dictionaries path must be not null and not empty.");
         Validate.notEmpty(name, "File name must be not null and not empty.");
-        if (loadedDictionaries.containsKey(name)) {
-            return Optional.of(loadedDictionaries.get(name).nextValue());
+        String key = name + "_" + (locale == null ? "def" : locale.getLanguage());
+        if (loadedDictionaries.containsKey(key)) {
+            return Optional.of(loadedDictionaries.get(key).nextValue());
         }
-        Dictionary dictionary = loadDictionary(String.format(FILENAME, path, name, locale == null ? "def" : locale.getLanguage()));
-        loadedDictionaries.put(name, dictionary);
+        Dictionary dictionary = loadDictionary(String.format(FILENAME, path, key));
+        loadedDictionaries.put(key, dictionary);
         return Optional.of(dictionary.nextValue());
-    }
-
-    public static String getUniqueDictionaryValue(final String path, final String name, final Locale locale) {
-        return null;
     }
 
     private static Dictionary loadDictionary(final String filename) {
@@ -46,6 +46,10 @@ public class DictionaryService {
             logger.warn("Could not load dictionary from file [ " + filename + " ]. Dictionary will be empty." );
             return new Dictionary(Collections.emptyList());
         }
+    }
+
+    private DictionaryService() {
+        throw new IllegalStateException();
     }
 
     private static class Dictionary {

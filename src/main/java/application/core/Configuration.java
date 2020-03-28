@@ -11,12 +11,14 @@ public class Configuration {
     private final String dictionaryPath;
     private final AnonymizationStrategy strategy;
     private final String secret;
+    private final Map<String, Object> params;
 
-    public Configuration(Locale locale, String dictionaryPath, AnonymizationStrategy strategy, String secret) {
+    public Configuration(Locale locale, String dictionaryPath, AnonymizationStrategy strategy, String secret, Map<String, Object> params) {
         this.locale = locale;
         this.dictionaryPath = dictionaryPath;
         this.strategy = strategy;
         this.secret = secret;
+        this.params = params;
     }
 
     public Locale getLocale() {
@@ -33,5 +35,9 @@ public class Configuration {
 
     public String getSecret() {
         return secret;
+    }
+
+    public Object getParam(final String param) {
+        return params.get(param);
     }
 }

@@ -20,13 +20,15 @@ public class AnonymizationTask implements Runnable {
     private final EntityDescriber describer;
     private final Locale locale;
     private final String dictPath;
+    private final String secret;
 
-    AnonymizationTask(final DataSource dataSourceIn, final DataSource dataSourceOut, final EntityDescriber describer, final Locale locale, final String dictPath) {
+    AnonymizationTask(final DataSource dataSourceIn, final DataSource dataSourceOut, final EntityDescriber describer, final Locale locale, final String dictPath, final String secret) {
         this.dataSourceIn = dataSourceIn;
         this.dataSourceOut = dataSourceOut;
         this.describer = describer;
         this.locale = locale;
         this.dictPath = dictPath;
+        this.secret = secret;
     }
 
     @Override
@@ -36,7 +38,7 @@ public class AnonymizationTask implements Runnable {
         List<EntityWrapper> wrappers = new LinkedList<>();
         while (dataSet.hasNext()) {
             EntityWrapper wrapper = dataSet.next();
-            AnonymizationService.anonymizeEntity(wrapper, locale, dictPath);
+            AnonymizationService.anonymizeEntity(wrapper, locale, dictPath, secret);
             wrappers.add(wrapper);
         }
         if (dataSourceIn.equals(dataSourceOut)) {

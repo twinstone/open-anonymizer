@@ -1,7 +1,9 @@
 package application.core.graph;
 
 import application.model.describer.EntityDescriber;
+import application.model.describer.RelationFieldDescriber;
 import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,17 +12,17 @@ import java.util.Map;
 
 public class GraphUtils {
 
-    public static Map<EntityDescriber, List<EntityDescriber>> buildRelationGraph(Map<String, EntityDescriber> describers) {
+    public static Map<EntityDescriber, List<EntityDescriber>> buildManyToOneRelationGraph(Map<String, EntityDescriber> describers) {
         Validate.notEmpty(describers, "Describers must be not empty map.");
         Map<EntityDescriber, List<EntityDescriber>> graph = new HashMap<>();
         describers.forEach((source, currentDescriber) -> {
             List<EntityDescriber> relations = new ArrayList<>();
-            List<String> names = currentDescriber.getRelationEntitiesNames();
-            names.forEach(name -> {
-                if (describers.containsKey(name)) {
-                    relations.add(describers.get(name));
+            List<RelationFieldDescriber> manyToOneRelations = currentDescriber.getManyToOneRelationFields();
+            manyToOneRelations.forEach(r -> {
+                if (describers.containsKey(r.getName())) {
+                    relations.add(describers.get(r.getName()));
                 } else {
-                    throw new IllegalArgumentException(String.format("Describers does not contain describer with name [%s]", name));
+                    throw new IllegalArgumentException(String.format("Describers does not contain describer with name [%s]", r.getName()));
                 }
             });
             graph.put(currentDescriber, relations);
@@ -28,8 +30,8 @@ public class GraphUtils {
         return graph;
     }
 
-    public static List<EntityDescriber> topologicalSort(Map<EntityDescriber, List<EntityDescriber>> graph) {
-        Validate.notEmpty(graph, "Graph must be not empty.");
+    public static List<Pair<EntityDescriber, EntityDescriber>> getManyToManyRelationDescribers(List<EntityDescriber> describers) {
+        Validate.notEmpty(describers, "Describers must be not empty.");
         return null;
     }
 }

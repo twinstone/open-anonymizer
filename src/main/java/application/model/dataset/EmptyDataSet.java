@@ -17,4 +17,9 @@ public class EmptyDataSet implements DataSet {
     public EntityWrapper next() {
         return null;
     }
+
+    @Override
+    public long size() {
+        return 0;
+    }
 }

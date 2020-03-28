@@ -7,4 +7,6 @@ public interface DataSet {
     boolean hasNext();
 
     EntityWrapper next();
+
+    long size();
 }

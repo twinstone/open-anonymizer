@@ -1,8 +1,8 @@
 package application.model.describer;
 
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class EntityDescriber implements Serializable, Describer {
 
@@ -10,7 +10,9 @@ public class EntityDescriber implements Serializable, Describer {
 
     private String name;
     private String source;
+    private String id;
     private List<FieldDescriber> fields;
+    private List<RelationFieldDescriber> relationFields;
 
     public String getName() {
         return name;
@@ -28,6 +30,14 @@ public class EntityDescriber implements Serializable, Describer {
         this.source = source;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public List<FieldDescriber> getFields() {
         return fields;
     }
@@ -36,8 +46,27 @@ public class EntityDescriber implements Serializable, Describer {
         this.fields = fields;
     }
 
+    public List<RelationFieldDescriber> getRelationFields() {
+        return relationFields;
+    }
+
+    public List<RelationFieldDescriber> getManyToOneRelationFields() {
+        return relationFields.stream()
+                .filter(f -> RelationFieldDescriber.RelationType.MANY_TO_ONE.equals(f.getRelationType()))
+                .collect(Collectors.toList());
+    }
+
+    public void setRelationFields(List<RelationFieldDescriber> relationFields) {
+        this.relationFields = relationFields;
+    }
+
     public boolean containsField(String name) {
         for (FieldDescriber field : fields) {
+            if (field.getName().equals(name)) {
+                return true;
+            }
+        }
+        for (RelationFieldDescriber field : relationFields) {
             if (field.getName().equals(name)) {
                 return true;
             }
@@ -45,7 +74,17 @@ public class EntityDescriber implements Serializable, Describer {
         return false;
     }
 
-    public List<String> getRelationEntitiesNames() {
-        return Collections.emptyList();
+    public List<String> getFieldNames() {
+        List<String> fields = this
+                .getFields()
+                .stream()
+                .map(FieldDescriber::getName)
+                .collect(Collectors.toList());
+        fields.addAll(this
+                .getManyToOneRelationFields()
+                .stream()
+                .map(RelationFieldDescriber::getName)
+                .collect(Collectors.toList()));
+        return fields;
     }
 }

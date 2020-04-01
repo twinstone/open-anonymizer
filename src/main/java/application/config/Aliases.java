@@ -15,11 +15,8 @@ public class Aliases {
         put("MONGO", "application.datasource.mongo.MongoBuilder");
         put("MYSQL", "application.datasource.mysql.MySqlBuilder");
         put("CSV", "application.datasource.csv.CsvBuilder");
+        put("SQL_FILE", "application.datasource.sqldump.SqlDumpBuilder");
     }});
-
-    public static String tryFind(final String key) {
-        return null;
-    }
 
     public static String tryFindBuilderClass(String name) {
         if (BUILDERS_ALIAS.containsKey(name)) {

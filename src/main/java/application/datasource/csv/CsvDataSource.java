@@ -5,17 +5,14 @@ import application.model.dataset.DataSet;
 import application.model.dataset.DataSetImpl;
 import application.model.dataset.EmptyDataSet;
 import application.model.describer.EntityDescriber;
-import application.model.mapper.CsvEntityMapper;
 import application.model.mapper.EntityWrapperMapper;
+import application.model.mapper.RowMapper;
 import application.model.wrapper.EntityWrapper;
 import com.opencsv.*;
 import org.apache.commons.lang3.Validate;
 import org.apache.log4j.Logger;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
@@ -28,16 +25,12 @@ public class CsvDataSource implements DataSource {
     private final File directory;
     private final char delimiter;
     private final int skipLines;
-    private final List<String> fields;
 
-    CsvDataSource(File directory, char delimiter, int skipLines, List<String> fields) {
+    public CsvDataSource(File directory, char delimiter, int skipLines) {
         Validate.notNull(directory, "Directory must be not null.");
-        Validate.notNull(fields, "Fields must be not null.");
-        Validate.notEmpty(fields, "Fields must be not empty.");
         this.directory = directory;
         this.delimiter = delimiter;
         this.skipLines = skipLines;
-        this.fields = fields;
     }
 
     @Override
@@ -55,8 +48,9 @@ public class CsvDataSource implements DataSource {
                     .withSkipLines(skipLines)
                     .withCSVParser(parser)
                     .build();
-            EntityWrapperMapper<String[]> mapper = new CsvEntityMapper(fields, describer);
+            EntityWrapperMapper<String[]> mapper = new RowMapper(getColumnNames(source), describer);
             List<String[]> allRows = reader.readAll();
+            reader.close();
             logger.info(String.format("Reading from file [%s]. %d rows read.", source.getAbsolutePath(), allRows.size()));
             return new DataSetImpl(allRows.stream().map(r -> mapper.getFromEntity(r, describer)).collect(Collectors.toList()), describer);
         } catch (Exception e) {
@@ -66,17 +60,13 @@ public class CsvDataSource implements DataSource {
     }
 
     @Override
-    public void saveEntity(EntityWrapper wrapper) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public void saveEntities(EntityDescriber describer, List<EntityWrapper> wrappers) {
         Validate.notNull(describer, "Describer must be not null.");
         Validate.notEmpty(wrappers, "Wrappers must contains at least one element.");
-        EntityWrapperMapper<String[]> mapper = new CsvEntityMapper(fields, describer);
+        EntityWrapperMapper<String[]> mapper = new RowMapper();
         File file = new File(String.format(FILE_PATTERN, directory.getAbsolutePath(), describer.getSource()));
-        if (!file.exists()) createEmptyDocument(describer);
+        List<String> fields = describer.getFieldNames();
+        if (!file.exists()) createEmptyDocument(describer.getSource(), fields);
         try (CSVWriter writer = new CSVWriter(new FileWriter(file, true))) {
             for (final EntityWrapper wrapper : wrappers) {
                 writer.writeNext(mapper.getFromWrapper(wrapper));
@@ -92,11 +82,26 @@ public class CsvDataSource implements DataSource {
         throw new UnsupportedOperationException();
     }
 
-    private void createEmptyDocument(EntityDescriber describer) {
-        String filename = String.format(FILE_PATTERN, directory.getAbsolutePath(), describer.getSource());
+    @Override
+    public void saveManyToManyRelation(DataSource input, EntityDescriber leftDescriber, EntityDescriber rightDescriber) {
+
+    }
+
+    private String[] getColumnNames(final File input) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(input))) {
+            String header = reader.readLine();
+            return header.split(String.valueOf(delimiter));
+        } catch (Exception e) {
+            logger.error(String.format("Exception reading header of csv file [%s]", input.getAbsolutePath()), e);
+            return null;
+        }
+    }
+
+    private void createEmptyDocument(String fileName, List<String> fields) {
+        String filename = String.format(FILE_PATTERN, directory.getAbsolutePath(), fileName);
         try (FileWriter writer = new FileWriter(filename)) {
             StringJoiner fieldJoiner = new StringJoiner(String.valueOf(delimiter));
-            describer.getFields().forEach(f -> fieldJoiner.add(f.getName()));
+            fields.forEach(fieldJoiner::add);
             writer.append(fieldJoiner.toString());
             logger.info(String.format("New csv file [%s] created with header [%s].", filename, fieldJoiner.toString()));
         } catch (IOException e) {

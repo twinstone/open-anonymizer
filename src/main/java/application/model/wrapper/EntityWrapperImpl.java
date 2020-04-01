@@ -24,6 +24,11 @@ public class EntityWrapperImpl implements EntityWrapper, Serializable {
     }
 
     @Override
+    public Object getId() {
+        return getValue(describer.getId());
+    }
+
+    @Override
     public Object getValue(String field) {
         if (!entityAsMap.containsKey(field)) {
             throw new IllegalArgumentException("Could not find field with name: " + field);

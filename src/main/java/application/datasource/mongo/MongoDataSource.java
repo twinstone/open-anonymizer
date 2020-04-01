@@ -5,9 +5,11 @@ import application.model.dataset.DataSet;
 import application.model.dataset.DataSetImpl;
 import application.model.dataset.EmptyDataSet;
 import application.model.describer.EntityDescriber;
+import application.model.describer.RelationEntityDescriber;
 import application.model.mapper.EntityWrapperMapper;
 import application.model.mapper.MongoEntityMapper;
 import application.model.wrapper.EntityWrapper;
+import com.mongodb.BasicDBObject;
 import com.mongodb.MongoException;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -50,16 +52,6 @@ public class MongoDataSource implements DataSource {
     }
 
     @Override
-    public void saveEntity(EntityWrapper wrapper) {
-        MongoCollection<Document> collection = database.getCollection(wrapper.describeEntity().getSource());
-        if (collection == null) {
-            database.createCollection(wrapper.describeEntity().getSource());
-            collection = database.getCollection(wrapper.describeEntity().getSource());
-        }
-        collection.insertOne(mapper.getFromWrapper(wrapper));
-    }
-
-    @Override
     public void saveEntities(EntityDescriber describer, List<EntityWrapper> wrappers) {
         Validate.notNull(describer, "Describer must be not null.");
         Validate.notEmpty(wrappers, "Wrappers must contains at least one element.");
@@ -75,6 +67,33 @@ public class MongoDataSource implements DataSource {
 
     @Override
     public void updateEntities(EntityDescriber describer, List<EntityWrapper> wrappers) {
+        Validate.notNull(describer, "Describer must be not null.");
+        Validate.notEmpty(wrappers, "Wrappers must contains at least one element.");
+        MongoCollection<Document> collection = database.getCollection(describer.getSource());
+        try {
+            for (final EntityWrapper wrapper : wrappers) {
+                collection.updateOne(new BasicDBObject().append(describer.getId(), wrapper.getId()), mapper.getFromWrapper(wrapper));
+                logger.info(String.format("Document with id [%s] updated.", wrapper.getId().toString()));
+            }
+            logger.info(String.format("Updated %d documents in collection [%s].", wrappers.size(), describer.getSource()));
+        } catch (MongoException e) {
+            logger.error(String.format("Exception updating entities in collection [%s].", describer.getSource()), e);
+        }
+    }
+
+    @Override
+    public void saveRelationEntity(DataSource input, RelationEntityDescriber describer) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void saveManyToManyRelation(DataSource input, EntityDescriber leftDescriber, EntityDescriber rightDescriber) {
+        Validate.notNull(input, "Input datasource must be not null.");
+        if (input.getType().equals(this.getType())) return;
+        MongoCollection<Document> collectionLeft = database.getCollection(leftDescriber.getSource());
+        MongoCollection<Document> collectionRight = database.getCollection(rightDescriber.getSource());
+        Validate.notNull(collectionLeft, "");
+        Validate.notNull(collectionRight, "");
 
     }
 

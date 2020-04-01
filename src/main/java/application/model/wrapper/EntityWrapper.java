@@ -6,6 +6,8 @@ import java.util.Map;
 
 public interface EntityWrapper {
 
+    Object getId();
+
     Object getValue(final String field);
 
     EntityWrapper insert(final String field, final Object value);

@@ -1,35 +1,117 @@
 {
   "in_connection": {
-    "data_source_builder": "application.datasource.mongo.MongoBuilder",
+    "data_source_builder": "application.datasource.mysql.MySqlBuilder",
     "host": "localhost",
-    "port": 27017,
-    "database": "users_1"
+    "port": 3306,
+    "database": "production",
+    "user": "root",
+    "password": "root",
+    "params": "useLegacyDatetimeCode=false&serverTimezone=UTC"
   },
   "out_connection": {
-    "data_source_builder": "application.datasource.mongo.MongoBuilder",
+    "data_source_builder": "application.datasource.mysql.MySqlBuilder",
     "host": "localhost",
-    "port": 27017,
-    "database": "users_2"
+    "port": 3306,
+    "database": "devel",
+    "user": "root",
+    "password": "root",
+    "params": "useLegacyDatetimeCode=false&serverTimezone=UTC"
   },
   "entities": [
     {
       "name": "user",
       "source": "users",
+      "id": "id",
       "fields": [
         {
-          "name": "username",
+          "name": "id",
           "type": "STRING",
           "unique": false,
-          "allowsNull": true,
+          "anonymizationClass": "application.core.anonymizer.FirstNameAnonymizer",
+          "anonymizationStrategy": "DELETE"
+        },
+        {
+          "name": "last_name",
+          "type": "STRING",
+          "unique": false,
+          "anonymizationClass": "application.core.anonymizer.FirstNameAnonymizer",
+          "anonymizationStrategy": "DELETE"
+        },
+        {
+          "name": "last_name",
+          "type": "STRING",
+          "unique": false,
           "anonymizationClass": "application.core.anonymizer.FirstNameAnonymizer",
           "anonymizationStrategy": "DELETE"
         },
         {
           "name": "email",
           "type": "STRING",
-          "unique" : true,
+          "unique": true,
           "anonymizationClass": "EMAIL",
           "anonymizationStrategy": "RANDOM"
+        },
+        {
+          "name": "password",
+          "type": "STRING",
+          "unique": false,
+          "anonymizationClass": "application.core.anonymizer.FirstNameAnonymizer",
+          "anonymizationStrategy": "HASH"
+        }
+      ]
+    },
+    {
+      "name": "contact",
+      "source": "contacts",
+      "fields": [
+        {
+          "name": "phone",
+          "type": "STRING",
+          "unique": false,
+          "allowsNull": false
+        }
+      ],
+      "relationFields": [
+        {
+          "name": "user_id",
+          "targetSource": "user",
+          "relationType": "MANY_TO_ONE"
+        }
+      ]
+    },
+    {
+      "name": "address",
+      "source": "addresses",
+      "fields": [
+        {
+          "name": "street",
+          "type": "STRING",
+          "unique": false,
+          "allowsNull": false
+        },
+        {
+          "name": "town",
+          "type": "STRING",
+          "unique": false,
+          "allowsNull": false
+        }
+      ]
+    }
+  ],
+  "relation_entities": [
+    {
+      "name": "userToBuilding",
+      "source": "user_building",
+      "fields": [
+        {
+          "name": "user_id",
+          "parentSource": "users",
+          "relationType": "MANY_TO_MANY"
+        },
+        {
+          "name": "building_id",
+          "parentSource": "buildings",
+          "relationType": "MANY_TO_MANY"
         }
       ]
     }

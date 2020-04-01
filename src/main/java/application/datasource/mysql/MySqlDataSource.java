@@ -1,6 +1,7 @@
 package application.datasource.mysql;
 
 import application.datasource.DataSource;
+import application.datasource.SqlUtils;
 import application.model.dataset.DataSet;
 import application.model.dataset.DataSetImpl;
 import application.model.dataset.EmptyDataSet;
@@ -16,12 +17,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.StringJoiner;
 
 public class MySqlDataSource implements DataSource {
 
     private static final EntityWrapperMapper<ResultSet> mapper = new MySqlEntityMapper();
-    private static final String FIELD_VALUE_DELIMITER = ", ";
 
     private final Logger logger = Logger.getLogger(MySqlDataSource.class);
     private final javax.sql.DataSource dataSource;
@@ -34,7 +33,7 @@ public class MySqlDataSource implements DataSource {
     public DataSet readDataSet(EntityDescriber describer) {
         Validate.notNull(describer, "Describer must be not null.");
         try (Connection connection = dataSource.getConnection()) {
-            String query = sqlSelectQuery(describer);
+            String query = SqlUtils.sqlSelectQuery(describer);
             List<EntityWrapper> list = new LinkedList<>();
             ResultSet resultSet = connection.createStatement().executeQuery(query);
             while (resultSet.next()) {
@@ -49,28 +48,14 @@ public class MySqlDataSource implements DataSource {
     }
 
     @Override
-    public void saveEntity(EntityWrapper wrapper) {
-        if (!checkSourceExists(wrapper.describeEntity().getSource())) {
-
-        }
-        try (Connection connection = dataSource.getConnection()) {
-            String query = sqlInsertQuery(wrapper);
-            int result = connection.createStatement().executeUpdate(query);
-            logger.info(String.format("Saving entity to dataset [%s], %d rows affected.", wrapper.describeEntity().getSource(), result));
-        } catch (SQLException e) {
-            logger.error(String.format("Exception saving new entity to dataset [%s].", wrapper.describeEntity().getSource()), e);
-        }
-    }
-
-    @Override
     public void saveEntities(EntityDescriber describer, List<EntityWrapper> wrappers) {
         Validate.notNull(describer, "Describer must be not null.");
         Validate.notEmpty(wrappers, "Wrappers must contains at least one element.");
-        if (!checkSourceExists(describer.getSource())) createSource(describer);
+        if (!checkSourceExists(describer.getSource())) createEmptyTable(describer);
         try (Connection connection = dataSource.getConnection()) {
             connection.setAutoCommit(false);
             for (final EntityWrapper wrapper : wrappers) {
-                String query = sqlInsertQuery(wrapper);
+                String query = SqlUtils.sqlInsertQuery(wrapper, SqlUtils.FIELD_VALUE_DELIMITER);
                 int result = connection.createStatement().executeUpdate(query);
                 logger.info(String.format("Saving entity to dataset [%s], %d row(s) affected.", wrapper.describeEntity().getSource(), result));
             }
@@ -82,42 +67,44 @@ public class MySqlDataSource implements DataSource {
 
     @Override
     public void updateEntities(EntityDescriber describer, List<EntityWrapper> wrappers) {
+        Validate.notNull(describer, "Describer must be not null.");
+        Validate.notEmpty(wrappers, "Wrappers must contains at least one element.");
+        try (Connection connection = dataSource.getConnection()) {
+            connection.setAutoCommit(false);
+            for (final EntityWrapper wrapper : wrappers) {
+                String query = SqlUtils.sqlUpdateQuery(wrapper);
+                int result = connection.createStatement().executeUpdate(query);
+                logger.info(String.format("Updating entity in dataset [%s], %d row(s) affected.", wrapper.describeEntity().getSource(), result));
+            }
+            connection.commit();
+        } catch (SQLException e) {
+            logger.error(String.format("Exception updating entity in dataset [%s].", describer.getSource()), e);
+        }
+    }
 
+    @Override
+    public void saveManyToManyRelation(DataSource input, EntityDescriber leftDescriber, EntityDescriber rightDescriber) {
+        Validate.isTrue(checkSourceExists(leftDescriber.getSource()), "Dataset [%s] does not exists. You ");
+        Validate.isTrue(checkSourceExists(rightDescriber.getSource()), "");
     }
 
     private boolean checkSourceExists(String name) {
         try (Connection connection = dataSource.getConnection()) {
-            ResultSet resultSet = connection.createStatement().executeQuery(sqlCheckTableExistsQuery(name));
+            ResultSet resultSet = connection.createStatement().executeQuery(SqlUtils.sqlCheckTableExistsQuery(name));
             return resultSet.isFirst() && resultSet.isLast();
         } catch (SQLException e) {
-            return true;
+            logger.error("Could not check table existence.", e);
+            return false;
         }
     }
 
-    private void createSource(EntityDescriber describer) {
-    }
-
-    private String sqlSelectQuery(EntityDescriber describer) {
-        StringJoiner joiner = new StringJoiner(FIELD_VALUE_DELIMITER);
-        describer.getFields().forEach(f -> joiner.add(f.getName()));
-        return String.format("SELECT %s FROM %s", joiner.toString(), describer.getSource());
-    }
-
-    private String sqlInsertQuery(EntityWrapper wrapper) {
-        StringJoiner fieldJoiner = new StringJoiner(FIELD_VALUE_DELIMITER);
-        StringJoiner valuesJoiner = new StringJoiner(FIELD_VALUE_DELIMITER);
-        return String.format("INSERT INTO %s (%s) VALUES (%s)", wrapper.describeEntity().getSource(), fieldJoiner.toString(), valuesJoiner.toString());
-    }
-
-    private String sqlUpdateQuery(EntityWrapper wrapper) {
-        return null;
-    }
-
-    private String sqlCheckTableExistsQuery(String name) {
-        return String.format("SHOW tables LIKE \'%s\'", name);
-    }
-
-    private String sqlCreateTableQuery(EntityDescriber describer) {
-        return null;
+    private void createEmptyTable(EntityDescriber describer) {
+        try (Connection connection = dataSource.getConnection()) {
+            String query = SqlUtils.sqlCreateTable(describer);
+            connection.createStatement().execute(query);
+            logger.info(String.format("Table [%s] created successfully", describer.getSource()));
+        } catch (SQLException e) {
+            logger.error(String.format("Exception creating new table [%s].", describer.getSource()), e);
+        }
     }
 }

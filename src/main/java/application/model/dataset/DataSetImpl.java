@@ -29,7 +29,17 @@ public class DataSetImpl implements DataSet {
     }
 
     @Override
+    public List<EntityWrapper> all() {
+        return resultSet;
+    }
+
+    @Override
     public long size() {
         return resultSet.size();
+    }
+
+    @Override
+    public DataSet subSet(int from, int to) {
+        return new DataSetImpl(resultSet.subList(from, to), describer);
     }
 }

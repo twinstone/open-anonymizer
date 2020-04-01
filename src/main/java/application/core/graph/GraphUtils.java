@@ -3,7 +3,6 @@ package application.core.graph;
 import application.model.describer.EntityDescriber;
 import application.model.describer.RelationFieldDescriber;
 import org.apache.commons.lang3.Validate;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,10 +27,5 @@ public class GraphUtils {
             graph.put(currentDescriber, relations);
         });
         return graph;
-    }
-
-    public static List<Pair<EntityDescriber, EntityDescriber>> getManyToManyRelationDescribers(List<EntityDescriber> describers) {
-        Validate.notEmpty(describers, "Describers must be not empty.");
-        return null;
     }
 }

@@ -1,0 +1,10 @@
+insert into `user` (id, first_name, last_name, email, gender, ip_address) values (1, 'Marcelo', 'Roscow', 'mroscow0@microsoft.com', 'Male', '48.106.65.229');
+insert into `user` (id, first_name, last_name, email, gender, ip_address) values (2, 'Dayle', 'Duggon', 'dduggon1@yelp.com', 'Female', '188.222.212.182');
+insert into `user` (id, first_name, last_name, email, gender, ip_address) values (3, 'Che', 'Pawlick', 'cpawlick2@imageshack.us', 'Male', '105.221.229.36');
+insert into `user` (id, first_name, last_name, email, gender, ip_address) values (4, 'Maris', 'O''Lunney', 'molunney3@harvard.edu', 'Female', '207.19.31.241');
+insert into `user` (id, first_name, last_name, email, gender, ip_address) values (5, 'Loutitia', 'Reichartz', 'lreichartz4@furl.net', 'Female', '100.121.57.83');
+insert into `user` (id, first_name, last_name, email, gender, ip_address) values (6, 'Hunter', 'Sheard', 'hsheard5@fastcompany.com', 'Male', '18.154.57.191');
+insert into `user` (id, first_name, last_name, email, gender, ip_address) values (7, 'Douglas', 'Itzkovsky', 'ditzkovsky6@webs.com', 'Male', '83.95.102.156');
+insert into `user` (id, first_name, last_name, email, gender, ip_address) values (8, 'Chrysler', 'Ghidoli', 'cghidoli7@mac.com', 'Female', '132.50.44.97');
+insert into `user` (id, first_name, last_name, email, gender, ip_address) values (9, 'Jourdan', 'Tomovic', 'jtomovic8@tinyurl.com', 'Female', '147.92.152.118');
+insert into `user` (id, first_name, last_name, email, gender, ip_address) values (10, 'Abigail', 'Dissman', 'adissman9@shutterfly.com', 'Female', '147.175.60.140');

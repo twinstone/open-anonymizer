@@ -1,4 +1,4 @@
-package openanonymizer.core.anonymizer;
+package openanonymizer.anonymizer;
 
 /**
  * An exception class. Could be thrown if anonymization process on some field failed.

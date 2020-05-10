@@ -1,6 +1,6 @@
 package openanonymizer.service;
 
-import openanonymizer.config.Configuration;
+import openanonymizer.config.ApplicationConfiguration;
 import openanonymizer.core.stage.StageManager;
 import org.apache.log4j.xml.DOMConfigurator;
 import org.junit.Assert;
@@ -19,7 +19,7 @@ public class StagesMangerTest {
 
     @Test
     public void test() {
-        Configuration configuration = new Configuration();
+        ApplicationConfiguration configuration = new ApplicationConfiguration();
         configuration.setStages(Arrays.asList("openanonymizer.service.SimpleTestStage", "test"));
         StageManager manager = StageManager.fromConfiguration(configuration);
         manager.processChain();

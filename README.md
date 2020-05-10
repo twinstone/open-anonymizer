@@ -224,7 +224,7 @@ Next add its reference to data source configuration:
 
 #### Anonymization classes
 Anonymization classes are used for field value transformation during data process. 
-To create your own anonymization class simply implements interface ``openanonymizer.core.anonymizer.Anonymizer`` like in example below:
+To create your own anonymization class simply implements interface ``openanonymizer.anonymizer.Anonymizer`` like in example below:
 ```
 package my.awesome.project;
    

@@ -2,7 +2,7 @@ package openanonymizer.config.loader;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import openanonymizer.config.Configuration;
+import openanonymizer.config.ApplicationConfiguration;
 import openanonymizer.datasource.DataSource;
 import openanonymizer.datasource.DataSourceFactory;
 import openanonymizer.model.describer.EntityDescriber;
@@ -38,10 +38,10 @@ public class JsonConfigurationLoader implements ConfigurationLoader {
     private static final String PAGE_SIZE = "page_size";
 
     @Override
-    public Configuration readConfiguration(String filePath) {
+    public ApplicationConfiguration readConfiguration(String filePath) {
         Validate.notEmpty(filePath, "Path to configuration file must be not null and not empty.");
         logger.info("Reading configuration from " + filePath);
-        Configuration configuration = new Configuration();
+        ApplicationConfiguration configuration = new ApplicationConfiguration();
         File config = new File(filePath);
         if (!config.exists()) {
             logger.error("Configuration file does not exist. Exiting.");
@@ -75,9 +75,9 @@ public class JsonConfigurationLoader implements ConfigurationLoader {
                 configuration.setDictionaryPath(node.get(DICTIONARY_PATH).textValue());
             }
             if (node.hasNonNull(LEVEL)) {
-                configuration.setLevel(Configuration.ValidationLevel.valueOf(node.get(LEVEL).textValue()));
+                configuration.setLevel(ApplicationConfiguration.ValidationLevel.valueOf(node.get(LEVEL).textValue()));
             } else {
-                configuration.setLevel(Configuration.ValidationLevel.ERROR);
+                configuration.setLevel(ApplicationConfiguration.ValidationLevel.ERROR);
             }
             if (node.hasNonNull(SECRET)) {
                 configuration.setSecret(node.get(SECRET).textValue());

@@ -1,6 +1,6 @@
 package openanonymizer.core.stage;
 
-import openanonymizer.config.Configuration;
+import openanonymizer.config.ApplicationConfiguration;
 import org.apache.commons.lang3.Validate;
 import org.apache.log4j.Logger;
 
@@ -13,10 +13,10 @@ import org.apache.log4j.Logger;
 public class StageManager {
 
     private final static Logger logger = Logger.getLogger(StageManager.class);
-    private final Configuration configuration;
+    private final ApplicationConfiguration configuration;
     private final StageChain chain;
 
-    private StageManager(final Configuration configuration, final StageChain chain) {
+    private StageManager(final ApplicationConfiguration configuration, final StageChain chain) {
         this.configuration = configuration;
         this.chain = chain;
     }
@@ -28,7 +28,7 @@ public class StageManager {
      * @param configuration application configuration
      * @return {@link StageManager} class
      */
-    public static StageManager fromConfiguration(final Configuration configuration) {
+    public static StageManager fromConfiguration(final ApplicationConfiguration configuration) {
         Validate.notNull(configuration, "Configuration must be not null.");
         Validate.notEmpty(configuration.getStages(), "Stages must be not empty.");
         StageChain.StageBuilder builder = new StageChain.StageBuilder();

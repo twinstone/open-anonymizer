@@ -1,4 +1,4 @@
-package openanonymizer.core.anonymizer;
+package openanonymizer.anonymizer;
 
 import openanonymizer.core.random.RandomSequenceGenerator;
 import openanonymizer.core.transformer.Transformer;
@@ -18,7 +18,7 @@ public class PatternBasedAnonymizer extends TransformerBasedAnonymizer implement
     private static final String UNIQUE = "unique";
 
     @Override
-    public void anonymize(EntityWrapper wrapper, FieldDescriber describer, Configuration configuration) throws Exception {
+    public void anonymize(EntityWrapper wrapper, FieldDescriber describer, AnonymizationConfiguration configuration) throws Exception {
         Validate.notNull(configuration.getParam(PATTERN), "Configuration param pattern must be not empty.");
         Validate.notNull(configuration.getParam(UNIQUE), "Configuration param unique must be not empty.");
         final String pattern = String.valueOf(configuration.getParam(PATTERN));

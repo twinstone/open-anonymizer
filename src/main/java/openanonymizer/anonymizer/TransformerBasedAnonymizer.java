@@ -1,4 +1,4 @@
-package openanonymizer.core.anonymizer;
+package openanonymizer.anonymizer;
 
 import openanonymizer.core.transformer.DefaultTransformer;
 import openanonymizer.core.transformer.Transformer;
@@ -20,7 +20,7 @@ public class TransformerBasedAnonymizer {
      * @param configuration anonymization process configuration
      * @return instance of {@link Transformer} or {@link DefaultTransformer} if configuration is empty.
      */
-    Transformer<?> getTransformer(Configuration configuration) throws Exception {
+    Transformer<?> getTransformer(AnonymizationConfiguration configuration) throws Exception {
         String transformer = String.valueOf(configuration.getParam(TRANSFORMER));
         if (StringUtils.isNotEmpty(transformer)) {
             Class<?> clazz = Class.forName(transformer);

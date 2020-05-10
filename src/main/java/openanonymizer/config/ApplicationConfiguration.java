@@ -13,7 +13,7 @@ import java.util.Locale;
  * @version 0.1
  * @since Open Anonymizer 1.0.0
  */
-public class Configuration {
+public class ApplicationConfiguration {
     private Integer threads;
     private Integer pageSize;
     private Locale locale;

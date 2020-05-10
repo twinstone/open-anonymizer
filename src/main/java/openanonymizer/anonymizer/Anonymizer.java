@@ -1,4 +1,4 @@
-package openanonymizer.core.anonymizer;
+package openanonymizer.anonymizer;
 
 import openanonymizer.model.describer.FieldDescriber;
 import openanonymizer.model.wrapper.EntityWrapper;
@@ -19,5 +19,5 @@ public interface Anonymizer {
      * @param configuration anonymization process configuration
      * @throws Exception if anonymization process failed
      */
-    void anonymize(EntityWrapper wrapper, FieldDescriber describer, Configuration configuration) throws Exception;
+    void anonymize(EntityWrapper wrapper, FieldDescriber describer, AnonymizationConfiguration configuration) throws Exception;
 }

@@ -1,13 +1,13 @@
 package openanonymizer.service;
 
-import openanonymizer.core.anonymizer.Anonymizer;
-import openanonymizer.core.anonymizer.Configuration;
+import openanonymizer.anonymizer.AnonymizationConfiguration;
+import openanonymizer.anonymizer.Anonymizer;
 import openanonymizer.model.describer.FieldDescriber;
 import openanonymizer.model.wrapper.EntityWrapper;
 
 public class TestAnonymizer implements Anonymizer {
     @Override
-    public void anonymize(EntityWrapper wrapper, FieldDescriber describer, Configuration configuration) {
+    public void anonymize(EntityWrapper wrapper, FieldDescriber describer, AnonymizationConfiguration configuration) {
         wrapper.update(describer.getName(), "anonymized");
     }
 }

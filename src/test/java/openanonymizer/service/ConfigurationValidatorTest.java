@@ -1,6 +1,6 @@
 package openanonymizer.service;
 
-import openanonymizer.config.Configuration;
+import openanonymizer.config.ApplicationConfiguration;
 import openanonymizer.config.loader.ConfigurationLoader;
 import openanonymizer.config.loader.JsonConfigurationLoader;
 import openanonymizer.core.validation.ConfigurationValidationException;
@@ -44,7 +44,7 @@ public class ConfigurationValidatorTest {
 
     @Test
     public void validConfig() throws ConfigurationValidationException {
-        Configuration configuration = loader.readConfiguration(DIR + "/valid.json");
+        ApplicationConfiguration configuration = loader.readConfiguration(DIR + "/valid.json");
         ConfigurationValidator.validateConfiguration(configuration);
         Assert.assertEquals(new Integer(100), configuration.getPageSize());
         Assert.assertEquals(new Integer(2), configuration.getThreads());

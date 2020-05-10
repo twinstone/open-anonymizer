@@ -1,4 +1,4 @@
-package openanonymizer.core.anonymizer;
+package openanonymizer.anonymizer;
 
 import java.util.Locale;
 import java.util.Map;
@@ -10,14 +10,14 @@ import java.util.Map;
  * @version 0.1
  * @since Open Anonymizer 1.0.0
  */
-public class Configuration {
+public class AnonymizationConfiguration {
 
     private final Locale locale;
     private final String dictionaryPath;
     private final String secret;
     private final Map<String, Object> params;
 
-    public Configuration(Locale locale, String dictionaryPath, String secret, Map<String, Object> params) {
+    public AnonymizationConfiguration(Locale locale, String dictionaryPath, String secret, Map<String, Object> params) {
         this.locale = locale;
         this.dictionaryPath = dictionaryPath;
         this.secret = secret;

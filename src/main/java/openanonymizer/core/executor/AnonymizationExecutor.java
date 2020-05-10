@@ -1,6 +1,6 @@
 package openanonymizer.core.executor;
 
-import openanonymizer.config.Configuration;
+import openanonymizer.config.ApplicationConfiguration;
 import openanonymizer.model.describer.EntityDescriber;
 import openanonymizer.model.describer.RelationEntityDescriber;
 import org.apache.commons.lang3.tuple.Pair;
@@ -20,9 +20,9 @@ public class AnonymizationExecutor {
     private static final Comparator<EntityDescriber> describerComparator = Comparator.comparingInt(describer -> describer.getRelationFields() == null ? 0
             : describer.getRelationFields().size());
 
-    private final Configuration configuration;
+    private final ApplicationConfiguration configuration;
 
-    public AnonymizationExecutor(Configuration configuration) {
+    public AnonymizationExecutor(ApplicationConfiguration configuration) {
         this.configuration = configuration;
     }
 

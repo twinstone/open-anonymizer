@@ -1,4 +1,4 @@
-package openanonymizer.core.anonymizer;
+package openanonymizer.anonymizer;
 
 import openanonymizer.core.dict.MultiDictionaryService;
 import openanonymizer.core.transformer.Transformer;
@@ -24,7 +24,7 @@ public class MultiDictionaryAndPatternBasedAnonymizer extends TransformerBasedAn
     private static final String DEFAULT_VALUE = "default";
 
     @Override
-    public void anonymize(EntityWrapper wrapper, FieldDescriber describer, Configuration configuration) throws Exception {
+    public void anonymize(EntityWrapper wrapper, FieldDescriber describer, AnonymizationConfiguration configuration) throws Exception {
         String result = MultiDictionaryService.generate(getPattern(configuration),
                 configuration.getDictionaryPath(),
                 getDictionaryNames(configuration).toArray(new String[0]),
@@ -37,22 +37,22 @@ public class MultiDictionaryAndPatternBasedAnonymizer extends TransformerBasedAn
         wrapper.update(describer.getName(), transformer.transform(result));
     }
 
-    private String getPattern(Configuration configuration) {
+    private String getPattern(AnonymizationConfiguration configuration) {
         Validate.notNull(configuration.getParam(PATTERN), "Configuration param pattern must be not null.");
         return String.valueOf(configuration.getParam(PATTERN));
     }
 
     @SuppressWarnings("unchecked")
-    private ArrayList<String> getDictionaryNames(Configuration configuration) {
+    private ArrayList<String> getDictionaryNames(AnonymizationConfiguration configuration) {
         return (ArrayList<String>) Optional.ofNullable(configuration.getParam(DICTIONARIES)).orElse(null);
     }
 
     @SuppressWarnings("unchecked")
-    private ArrayList<String> getPatterns(Configuration configuration) {
+    private ArrayList<String> getPatterns(AnonymizationConfiguration configuration) {
         return (ArrayList<String>) Optional.ofNullable(configuration.getParam(PATTERNS)).orElse(null);
     }
 
-    private String getDefaultValue(Configuration configuration, FieldDescriber describer) {
+    private String getDefaultValue(AnonymizationConfiguration configuration, FieldDescriber describer) {
         if (configuration.getParam(DEFAULT_VALUE) == null) return describer.getDefaultValue();
         return String.valueOf(configuration.getParam(DEFAULT_VALUE));
     }

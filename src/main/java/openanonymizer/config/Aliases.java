@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Class that contains aliases for {@link openanonymizer.datasource.DataSourceBuilder} and {@link openanonymizer.core.anonymizer.Anonymizer}.
+ * Class that contains aliases for {@link openanonymizer.datasource.DataSourceBuilder} and {@link openanonymizer.anonymizer.Anonymizer}.
  * You could use specific key instead of using whole class path.
  * <p>
  * Use static methods of this class. Do not use constructor.
@@ -16,16 +16,16 @@ import java.util.Map;
 public final class Aliases {
 
     /**
-     * Alias of anonymizers that implement {@link openanonymizer.core.anonymizer.Anonymizer} interface.
+     * Alias of anonymizers that implement {@link openanonymizer.anonymizer.Anonymizer} interface.
      */
     private final static Map<String, String> ANONYMIZERS_ALIAS = Collections.unmodifiableMap(new HashMap<String, String>() {{
-        put("STRING_DEFAULT", "openanonymizer.core.anonymizer.DefaultStringAnonymizer");
-        put("INTEGER_DEFAULT", "openanonymizer.core.anonymizer.DefaultIntegerAnonymizer");
-        put("DELETE", "openanonymizer.core.anonymizer.DeleteAnonymizer");
-        put("HASH", "openanonymizer.core.anonymizer.HashAnonymizer");
-        put("DICTIONARY", "openanonymizer.core.anonymizer.DictionaryBasedAnonymizer");
-        put("PATTERN", "openanonymizer.core.anonymizer.PatternBasedAnonymizer");
-        put("MULTI", "openanonymizer.core.anonymizer.MultiDictionaryAndPatternBasedAnonymizer");
+        put("STRING_DEFAULT", "openanonymizer.anonymizer.DefaultStringAnonymizer");
+        put("INTEGER_DEFAULT", "openanonymizer.anonymizer.DefaultIntegerAnonymizer");
+        put("DELETE", "openanonymizer.anonymizer.DeleteAnonymizer");
+        put("HASH", "openanonymizer.anonymizer.HashAnonymizer");
+        put("DICTIONARY", "openanonymizer.anonymizer.DictionaryBasedAnonymizer");
+        put("PATTERN", "openanonymizer.anonymizer.PatternBasedAnonymizer");
+        put("MULTI", "openanonymizer.anonymizer.MultiDictionaryAndPatternBasedAnonymizer");
     }});
 
     /**

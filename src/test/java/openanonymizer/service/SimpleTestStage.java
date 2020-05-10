@@ -1,13 +1,13 @@
 package openanonymizer.service;
 
-import openanonymizer.config.Configuration;
+import openanonymizer.config.ApplicationConfiguration;
 import openanonymizer.core.stage.Stage;
 
 import java.util.Locale;
 
 public class SimpleTestStage implements Stage {
     @Override
-    public void executeStage(Configuration configuration) {
+    public void executeStage(ApplicationConfiguration configuration) {
         configuration.setLocale(Locale.CHINA);
     }
 }

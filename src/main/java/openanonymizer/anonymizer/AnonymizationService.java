@@ -1,7 +1,7 @@
-package openanonymizer.core.anonymizer;
+package openanonymizer.anonymizer;
 
 import openanonymizer.config.Aliases;
-import openanonymizer.config.Configuration.ValidationLevel;
+import openanonymizer.config.ApplicationConfiguration.ValidationLevel;
 import openanonymizer.model.describer.FieldDescriber;
 import openanonymizer.model.wrapper.EntityWrapper;
 import org.apache.commons.lang3.Validate;
@@ -77,7 +77,7 @@ public final class AnonymizationService {
             }
             if (Anonymizer.class.isAssignableFrom(anonClass)) {
                 Anonymizer anonymizer = (Anonymizer) anonClass.getConstructor().newInstance();
-                Configuration config = new Configuration(locale, dictPath,
+                AnonymizationConfiguration config = new AnonymizationConfiguration(locale, dictPath,
                         describer.getConfiguration().getSecret() == null ? secret : describer.getConfiguration().getSecret(),
                         describer.getConfiguration().getParams());
                 anonymizer.anonymize(entity, describer, config);

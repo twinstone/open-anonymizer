@@ -1,6 +1,6 @@
 package openanonymizer.config.loader;
 
-import openanonymizer.config.Configuration;
+import openanonymizer.config.ApplicationConfiguration;
 
 /**
  * This interface has only one method. It allows to load configuration from file in specified format.
@@ -14,7 +14,7 @@ public interface ConfigurationLoader {
      * Reads configuration file and return configuration class.
      *
      * @param filePath path to file in storage
-     * @return application configuration wrapped by {@link Configuration} class
+     * @return application configuration wrapped by {@link ApplicationConfiguration} class
      */
-    Configuration readConfiguration(String filePath);
+    ApplicationConfiguration readConfiguration(String filePath);
 }

@@ -1,7 +1,8 @@
 package openanonymizer.service;
 
-import openanonymizer.core.anonymizer.AnonymizationException;
-import openanonymizer.core.anonymizer.AnonymizationService;
+import openanonymizer.anonymizer.AnonymizationException;
+import openanonymizer.anonymizer.AnonymizationService;
+import openanonymizer.config.ApplicationConfiguration;
 import openanonymizer.model.describer.EntityDescriber;
 import openanonymizer.model.describer.FieldDescriber;
 import openanonymizer.model.wrapper.EntityWrapper;
@@ -50,17 +51,17 @@ public class AnonymizationServiceTest {
 
     @Test
     public void randomAnonymizationClassInfoTest() throws AnonymizationException {
-        AnonymizationService.anonymizeEntity(wrapper, null, null, null, openanonymizer.config.Configuration.ValidationLevel.INFO, null);
+        AnonymizationService.anonymizeEntity(wrapper, null, null, null, ApplicationConfiguration.ValidationLevel.INFO, null);
     }
 
     @Test
     public void randomAnonymizationClassWarnTest() throws AnonymizationException {
-        AnonymizationService.anonymizeEntity(wrapper, null, null, null, openanonymizer.config.Configuration.ValidationLevel.WARN, null);
+        AnonymizationService.anonymizeEntity(wrapper, null, null, null, ApplicationConfiguration.ValidationLevel.WARN, null);
     }
 
     @Test(expected = AnonymizationException.class)
     public void randomAnonymizationClassErrorTest() throws AnonymizationException {
-        AnonymizationService.anonymizeEntity(wrapper, null, null, null, openanonymizer.config.Configuration.ValidationLevel.ERROR, null);
+        AnonymizationService.anonymizeEntity(wrapper, null, null, null, ApplicationConfiguration.ValidationLevel.ERROR, null);
     }
 
     @Test
@@ -68,7 +69,7 @@ public class AnonymizationServiceTest {
         FieldDescriber.AnonymizationConfiguration configuration = new FieldDescriber.AnonymizationConfiguration();
         configuration.setAnonymizationClass("openanonymizer.service.TestAnonymizer");
         wrapper.describeEntity().getFields().forEach(f -> f.setConfiguration(configuration));
-        wrapper = AnonymizationService.anonymizeEntity(wrapper, null, null, null, openanonymizer.config.Configuration.ValidationLevel.ERROR, this.getClass().getClassLoader());
+        wrapper = AnonymizationService.anonymizeEntity(wrapper, null, null, null, ApplicationConfiguration.ValidationLevel.ERROR, this.getClass().getClassLoader());
         Assert.assertEquals("anonymized", wrapper.getValue("name"));
         Assert.assertEquals("anonymized", wrapper.getValue("age"));
     }

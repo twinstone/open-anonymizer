@@ -1,4 +1,4 @@
-package openanonymizer.core.anonymizer;
+package openanonymizer.anonymizer;
 
 import openanonymizer.model.describer.FieldDescriber;
 import openanonymizer.model.wrapper.EntityWrapper;
@@ -11,7 +11,7 @@ import openanonymizer.model.wrapper.EntityWrapper;
  */
 public class DeleteAnonymizer implements Anonymizer {
     @Override
-    public void anonymize(EntityWrapper wrapper, FieldDescriber describer, Configuration configuration) {
+    public void anonymize(EntityWrapper wrapper, FieldDescriber describer, AnonymizationConfiguration configuration) {
         if (describer.isUnique() || !describer.allowsNull()) {
             throw new IllegalArgumentException("Could not delete field that is unique or does not allow null value.");
         }

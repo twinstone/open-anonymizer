@@ -1,4 +1,4 @@
-package openanonymizer.core.anonymizer;
+package openanonymizer.anonymizer;
 
 import openanonymizer.core.dict.DictionaryService;
 import openanonymizer.model.describer.FieldDescriber;
@@ -17,17 +17,17 @@ public class DictionaryBasedAnonymizer implements Anonymizer {
     private static final String DEFAULT_VALUE = "default";
 
     @Override
-    public void anonymize(EntityWrapper wrapper, FieldDescriber describer, Configuration configuration) {
+    public void anonymize(EntityWrapper wrapper, FieldDescriber describer, AnonymizationConfiguration configuration) {
         wrapper.update(describer.getName(), DictionaryService.getDictionaryValue(configuration.getDictionaryPath(), getDictionaryName(configuration), configuration.getLocale())
                 .orElse(getDefaultValue(configuration, describer)));
     }
 
-    private String getDictionaryName(Configuration configuration) {
+    private String getDictionaryName(AnonymizationConfiguration configuration) {
         Validate.notNull(configuration.getParam(DICTIONARY), "Configuration param dictionary must be not null.");
         return String.valueOf(configuration.getParam(DICTIONARY));
     }
 
-    private String getDefaultValue(Configuration configuration, FieldDescriber describer) {
+    private String getDefaultValue(AnonymizationConfiguration configuration, FieldDescriber describer) {
         if (configuration.getParam(DEFAULT_VALUE) == null) return describer.getDefaultValue();
         return String.valueOf(configuration.getParam(DEFAULT_VALUE));
     }

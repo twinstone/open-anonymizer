@@ -1,7 +1,7 @@
 package openanonymizer.core.executor;
 
-import openanonymizer.config.Configuration;
-import openanonymizer.core.anonymizer.AnonymizationService;
+import openanonymizer.anonymizer.AnonymizationService;
+import openanonymizer.config.ApplicationConfiguration;
 import openanonymizer.datasource.PagedDataSource;
 import openanonymizer.model.dataset.DataSet;
 import openanonymizer.model.dataset.DataSetImpl;
@@ -28,10 +28,10 @@ public class AnonymizationTask implements Callable<Long> {
     private long offset = 0;
     private final ReentrantLock lock = new ReentrantLock();
 
-    private final Configuration configuration;
+    private final ApplicationConfiguration configuration;
     private final EntityDescriber describer;
 
-    AnonymizationTask(final Configuration configuration,
+    AnonymizationTask(final ApplicationConfiguration configuration,
                       final EntityDescriber describer) {
         this.configuration = configuration;
         this.describer = describer;
@@ -46,7 +46,7 @@ public class AnonymizationTask implements Callable<Long> {
                             logger.info(String.format("Thread with id [%s] finished. Processed %s pages.", future.toString(), future.get()));
                         } catch (Exception e) {
                             logger.error("Exception getting future value.", e);
-                            if (Configuration.ValidationLevel.ERROR.equals(configuration.getLevel())) {
+                            if (ApplicationConfiguration.ValidationLevel.ERROR.equals(configuration.getLevel())) {
                                 logger.warn("Task finished with exception. Exiting.");
                                 System.exit(1);
                             }
@@ -55,7 +55,7 @@ public class AnonymizationTask implements Callable<Long> {
             executors.shutdown();
         } catch (InterruptedException e) {
             logger.error("Exception running anonymization task.", e);
-            if (Configuration.ValidationLevel.ERROR.equals(configuration.getLevel())) {
+            if (ApplicationConfiguration.ValidationLevel.ERROR.equals(configuration.getLevel())) {
                 logger.warn("Task finished with exception. Exiting.");
                 System.exit(1);
             }

@@ -1,4 +1,4 @@
-package openanonymizer.core.anonymizer;
+package openanonymizer.anonymizer;
 
 import openanonymizer.model.describer.FieldDescriber;
 import openanonymizer.model.wrapper.EntityWrapper;
@@ -11,7 +11,7 @@ import openanonymizer.model.wrapper.EntityWrapper;
  */
 public abstract class DefaultAnonymizer<T> implements Anonymizer {
     @Override
-    public void anonymize(EntityWrapper wrapper, FieldDescriber describer, Configuration configuration) {
+    public void anonymize(EntityWrapper wrapper, FieldDescriber describer, AnonymizationConfiguration configuration) {
         if (describer.isUnique())
             throw new IllegalStateException("Could not set default value into field that is unique.");
         wrapper.update(describer.getName(), getDefaultValue(describer.getDefaultValue(), describer.getDefaultParams()));

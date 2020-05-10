@@ -1,6 +1,6 @@
 package openanonymizer.core.stage;
 
-import openanonymizer.config.Configuration;
+import openanonymizer.config.ApplicationConfiguration;
 import org.apache.log4j.Logger;
 
 import java.util.LinkedList;
@@ -26,7 +26,7 @@ class StageChain {
      * @param configuration application configuration
      * @param logger
      */
-    void execute(final Configuration configuration, final Logger logger) {
+    void execute(final ApplicationConfiguration configuration, final Logger logger) {
         for (final Stage stage : stages) {
             logger.info(String.format("Executing stage [%s].", stage.getClass().getSimpleName()));
             stage.executeStage(configuration);

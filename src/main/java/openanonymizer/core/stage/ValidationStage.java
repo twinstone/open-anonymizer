@@ -1,6 +1,6 @@
 package openanonymizer.core.stage;
 
-import openanonymizer.config.Configuration;
+import openanonymizer.config.ApplicationConfiguration;
 import openanonymizer.core.validation.ConfigurationValidationException;
 import openanonymizer.core.validation.ConfigurationValidator;
 import org.apache.log4j.Logger;
@@ -17,7 +17,7 @@ public class ValidationStage implements Stage {
     private final static Logger logger = Logger.getLogger(ValidationStage.class);
 
     @Override
-    public void executeStage(Configuration configuration) {
+    public void executeStage(ApplicationConfiguration configuration) {
         try {
             ConfigurationValidator.validateConfiguration(configuration);
         } catch (ConfigurationValidationException e) {

@@ -1,6 +1,6 @@
 package openanonymizer.core.stage;
 
-import openanonymizer.config.Configuration;
+import openanonymizer.config.ApplicationConfiguration;
 import openanonymizer.core.executor.AnonymizationExecutor;
 
 /**
@@ -12,7 +12,7 @@ import openanonymizer.core.executor.AnonymizationExecutor;
 public class AnonymizationStage implements Stage {
 
     @Override
-    public void executeStage(Configuration configuration) {
+    public void executeStage(ApplicationConfiguration configuration) {
         AnonymizationExecutor executor = new AnonymizationExecutor(configuration);
         executor.doExecute();
     }

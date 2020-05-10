@@ -1,4 +1,4 @@
-package openanonymizer.core.anonymizer;
+package openanonymizer.anonymizer;
 
 public class DefaultIntegerAnonymizer extends DefaultAnonymizer<Integer> {
     @Override

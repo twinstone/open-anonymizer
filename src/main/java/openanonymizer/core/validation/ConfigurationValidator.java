@@ -1,7 +1,7 @@
 package openanonymizer.core.validation;
 
 import openanonymizer.config.Aliases;
-import openanonymizer.config.Configuration;
+import openanonymizer.config.ApplicationConfiguration;
 import openanonymizer.model.describer.EntityDescriber;
 import openanonymizer.model.describer.FieldDescriber;
 import openanonymizer.model.describer.RelationEntityDescriber;
@@ -11,7 +11,7 @@ import org.apache.commons.lang3.Validate;
 import org.apache.log4j.Logger;
 
 /**
- * This class validates application configuration {@link Configuration}.
+ * This class validates application configuration {@link ApplicationConfiguration}.
  * <p>
  * Use static methods of this class. Do not use constructor.
  *
@@ -28,7 +28,7 @@ public final class ConfigurationValidator {
      * @param configuration application configuration
      * @throws ConfigurationValidationException if validation failed
      */
-    public static void validateConfiguration(Configuration configuration) throws ConfigurationValidationException {
+    public static void validateConfiguration(ApplicationConfiguration configuration) throws ConfigurationValidationException {
         logger.info("Validating configuration started.");
         try {
             Validate.notNull(configuration.getInputSource(), "Input source must be not null.");

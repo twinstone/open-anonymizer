@@ -14,7 +14,7 @@ public class ConfigurationLoaderTest {
 
     private final static URL PATH = ConfigurationLoaderTest.class.getClassLoader().getResource("config.json");
 
-    private Configuration configuration;
+    private ApplicationConfiguration configuration;
 
     @Before
     public void before() {

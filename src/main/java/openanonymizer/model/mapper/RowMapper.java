@@ -22,20 +22,24 @@ public class RowMapper implements EntityWrapperMapper<String[]> {
 
     private static final Pattern withQuotes = Pattern.compile("^('|\\\"|`)(.*)('|\\\"|`)$");
     private final Map<String, Integer> indexMapping;
+    private final String nullValue;
 
-    public RowMapper(List<String> fields) {
+    public RowMapper(List<String> fields, String nullValue) {
         Validate.notEmpty(fields, "Fields must be not empty.");
+        Validate.notEmpty(nullValue, "Value for null must be not empty.");
         indexMapping = new HashMap<>();
         int counter = 0;
         for (final String field : fields) {
             indexMapping.put(field, counter);
             counter++;
         }
+        this.nullValue = nullValue;
     }
 
-    public RowMapper(String[] fields, EntityDescriber describer) {
+    public RowMapper(String[] fields, EntityDescriber describer, String nullValue) {
         Validate.notEmpty(fields, "Fields must be not null or empty.");
         Validate.notNull(describer, "Describer must be not null.");
+        Validate.notEmpty(nullValue, "Value for null be not null or empty.");
         indexMapping = new HashMap<>();
         for (int i = 0; i < fields.length; i++) {
             String field = fields[i];
@@ -43,6 +47,7 @@ public class RowMapper implements EntityWrapperMapper<String[]> {
                 indexMapping.put(removeQuoting(field), i);
             }
         }
+        this.nullValue = nullValue;
     }
 
     @Override
@@ -64,7 +69,14 @@ public class RowMapper implements EntityWrapperMapper<String[]> {
         try {
             int size = Collections.max(indexMapping.values()) + 1;
             String[] columns = new String[size];
-            indexMapping.forEach((k, v) -> columns[v] = wrapper.getValue(k).toString());
+            indexMapping.forEach((k, v) -> {
+                Object value = wrapper.getValue(k);
+                if (value == null) {
+                    columns[v] = nullValue;
+                } else {
+                    columns[v] = value.toString();
+                }
+            });
             return columns;
         } catch (Exception e) {
             throw new MappingException(e);

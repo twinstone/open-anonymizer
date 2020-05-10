@@ -4,11 +4,11 @@ import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * This class allows to store any transformation application during run time.
@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class TransformationStorage {
 
     private static final Logger logger = Logger.getLogger(TransformationStorage.class);
-    private static final Map<String, List<Pair>> pairStorage = new ConcurrentHashMap<>();
+    private static final Map<String, Queue<Pair>> pairStorage = new ConcurrentHashMap<>();
 
     /**
      * Allows to insert a new value into transformation storage.
@@ -44,7 +44,7 @@ public final class TransformationStorage {
         Validate.notNull(rightValue, "Right value must be not null.");
         Pair<L, R> pair = Pair.of(leftValue, rightValue);
         if (!pairStorage.containsKey(source)) {
-            pairStorage.put(source, new LinkedList<>());
+            pairStorage.put(source, new ConcurrentLinkedQueue<>());
         }
         pairStorage.get(source).add(pair);
         logger.info(String.format("Added new transformation for source [%s]: %s -> %s", source, leftValue, rightValue));
@@ -62,7 +62,7 @@ public final class TransformationStorage {
     public static <L> Optional<Pair> findByLeft(final String source, final L left) {
         Validate.notNull(source, "Source must be not null.");
         Validate.notNull(left, "Left value must be not null.");
-        List<Pair> list = pairStorage.get(source);
+        Queue<Pair> list = pairStorage.get(source);
         if (list != null) {
             return list.stream().filter(pair -> pair.getLeft().equals(left)).findFirst();
         } else {

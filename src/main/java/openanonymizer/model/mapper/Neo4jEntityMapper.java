@@ -1,5 +1,6 @@
 package openanonymizer.model.mapper;
 
+import com.google.common.collect.Maps;
 import openanonymizer.model.describer.EntityDescriber;
 import openanonymizer.model.wrapper.EntityWrapper;
 import openanonymizer.model.wrapper.Neo4jEntityWrapperImpl;
@@ -22,7 +23,7 @@ public class Neo4jEntityMapper implements EntityWrapperMapper<Record> {
         Validate.notNull(describer, "Describer must be not null.");
         NodeValue v = (NodeValue) entity.get(0);
         InternalNode node = (InternalNode) v.asNode();
-        return new Neo4jEntityWrapperImpl(node.id(), node.asMap(), describer);
+        return new Neo4jEntityWrapperImpl(node.id(), Maps.newHashMap(node.asMap()), describer);
     }
 
     @Override

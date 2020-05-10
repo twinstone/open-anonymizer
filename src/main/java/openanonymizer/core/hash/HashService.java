@@ -3,9 +3,11 @@ package openanonymizer.core.hash;
 import org.apache.commons.lang3.Validate;
 import org.apache.log4j.Logger;
 
-import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * This class allows to generate hash for any {@link String} input using MD5 algorithm.
@@ -33,8 +35,9 @@ public final class HashService {
         try {
             logger.info(String.format("Generating new hash for input [%s] using secret [%s].", input, secret));
             MessageDigest digest = MessageDigest.getInstance(ALGORITHM);
-            digest.update(input.getBytes());
-            return new String(digest.digest(secret.getBytes()), Charset.defaultCharset());
+            digest.update(input.getBytes(UTF_8));
+            byte[] bytes = digest.digest(secret.getBytes(UTF_8));
+            return new String(Base64.getMimeEncoder().encode(bytes));
         } catch (NoSuchAlgorithmException e) {
             logger.error(String.format("Could not generate hash for input [%s].", input), e);
             return input;

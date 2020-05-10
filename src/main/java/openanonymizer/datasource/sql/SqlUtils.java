@@ -38,6 +38,9 @@ public final class SqlUtils {
     public static String sqlSelectQuery(EntityDescriber describer) {
         StringJoiner joiner = new StringJoiner(SqlUtils.FIELD_VALUE_DELIMITER);
         describer.getFields().forEach(f -> joiner.add(f.getName()));
+        if (describer.getRelationFields() != null) {
+            describer.getRelationFields().forEach(f -> joiner.add(f.getName()));
+        }
         return String.format("SELECT %s FROM `%s`;", joiner.toString(), describer.getSource());
     }
 
@@ -52,6 +55,9 @@ public final class SqlUtils {
     public static String sqlSelectPagedQuery(EntityDescriber describer, long offset, int limit) {
         StringJoiner joiner = new StringJoiner(SqlUtils.FIELD_VALUE_DELIMITER);
         describer.getFields().forEach(f -> joiner.add(f.getName()));
+        if (describer.getRelationFields() != null) {
+            describer.getRelationFields().forEach(f -> joiner.add(f.getName()));
+        }
         return String.format("SELECT %s FROM `%s` LIMIT %s, %s;", joiner.toString(), describer.getSource(), offset, limit);
     }
 
@@ -67,7 +73,12 @@ public final class SqlUtils {
         List<String> fields = wrapper.describeEntity().getFieldNames();
         fields.forEach(field -> {
             fieldJoiner.add(String.format("`%s`", field));
-            valuesJoiner.add(String.format("'%s'", wrapper.getValue(field).toString()));
+            Object value = wrapper.getValue(field);
+            if (value != null) {
+                valuesJoiner.add(String.format("'%s'", value.toString().replace("'", "''")));
+            } else {
+                valuesJoiner.add("NULL");
+            }
         });
         return String.format("INSERT INTO `%s` (%s) VALUES (%s);", wrapper.describeEntity().getSource(), fieldJoiner.toString(), valuesJoiner.toString());
     }
@@ -94,7 +105,7 @@ public final class SqlUtils {
      * @return sql show query
      */
     public static String sqlCheckTableExistsQuery(String name) {
-        return String.format("SHOW tables LIKE `%s`", name);
+        return String.format("SHOW TABLES LIKE '%s'", name);
     }
 
     private SqlUtils() {

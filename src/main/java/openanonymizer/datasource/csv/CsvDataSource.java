@@ -31,12 +31,14 @@ public class CsvDataSource implements DataSource {
     private final File directory;
     private final char delimiter;
     private final int skipLines;
+    private final String nullValue;
 
-    public CsvDataSource(File directory, char delimiter, int skipLines) {
+    public CsvDataSource(File directory, char delimiter, int skipLines, String nullValue) {
         Validate.notNull(directory, "Directory must be not null.");
         this.directory = directory;
         this.delimiter = delimiter;
         this.skipLines = skipLines;
+        this.nullValue = nullValue;
     }
 
     @Override
@@ -54,7 +56,7 @@ public class CsvDataSource implements DataSource {
                     .withSkipLines(skipLines)
                     .withCSVParser(parser)
                     .build();
-            EntityWrapperMapper<String[]> mapper = new RowMapper(getColumnNames(source), describer);
+            EntityWrapperMapper<String[]> mapper = new RowMapper(getColumnNames(source), describer, nullValue);
             List<String[]> allRows = reader.readAll();
             reader.close();
             logger.info(String.format("Reading from file [%s]. %d rows read.", source.getAbsolutePath(), allRows.size()));
@@ -71,7 +73,7 @@ public class CsvDataSource implements DataSource {
         Validate.notNull(dataSet, "Wrappers must contains at least one element.");
         File file = new File(String.format(FILE_PATTERN, directory.getAbsolutePath(), describer.getSource()));
         List<String> fields = describer.getFieldNames();
-        EntityWrapperMapper<String[]> mapper = new RowMapper(fields);
+        EntityWrapperMapper<String[]> mapper = new RowMapper(fields, nullValue);
         if (!file.exists()) createEmptyDocument(describer.getSource(), fields);
         try (CSVWriter writer = new CSVWriter(new FileWriter(file, true))) {
             long counter = 0;

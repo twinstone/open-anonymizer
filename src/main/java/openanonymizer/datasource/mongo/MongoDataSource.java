@@ -17,7 +17,6 @@ import org.apache.log4j.Logger;
 import org.bson.Document;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -61,10 +60,12 @@ public class MongoDataSource implements DataSource, PagedDataSource {
     public void saveEntities(EntityDescriber describer, DataSet dataSet) {
         Validate.notNull(describer, "Describer must be not null.");
         Validate.notNull(dataSet, "Data set must be nit null.");
-        MongoCollection<Document> collection = Optional.of(database.getCollection(describer.getSource()))
-                .orElse(createEmptyCollection(describer.getSource()));
+        MongoCollection<Document> collection = database.getCollection(describer.getSource(), Document.class);
         try {
-            collection.insertMany(StreamSupport.stream(dataSet.spliterator(), false).map(mapper::getFromWrapper).collect(Collectors.toList()));
+            List<Document> documents = StreamSupport.stream(dataSet.spliterator(), false).map(mapper::getFromWrapper).collect(Collectors.toList());
+            if (!documents.isEmpty()) {
+                collection.insertMany(documents);
+            }
             logger.info(String.format("Documents inserted into collection [%s].", describer.getSource()));
         } catch (MongoException e) {
             logger.error(String.format("Exception saving new entities to collection [%s].", describer.getSource()), e);
@@ -125,11 +126,6 @@ public class MongoDataSource implements DataSource, PagedDataSource {
             logger.error(String.format("Exception reading from collection [%s].", describer.getSource()), e);
             return 0;
         }
-    }
-
-    private MongoCollection<Document> createEmptyCollection(final String name) {
-        database.createCollection(name);
-        return database.getCollection(name);
     }
 
     @Override

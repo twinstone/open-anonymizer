@@ -19,7 +19,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class AnonymizationTask implements Runnable {
+public class AnonymizationTask implements Callable<Long> {
 
     private static final Logger logger = Logger.getLogger(AnonymizationTask.class);
 
@@ -38,40 +38,33 @@ public class AnonymizationTask implements Runnable {
         executors = Executors.newFixedThreadPool(configuration.getThreads());
     }
 
-    @Override
-    public void run() {
-        if (PagedDataSource.class.isAssignableFrom(configuration.getInputSource().getClass())) {
-            List<Callable<Integer>> callable = IntStream.range(0, configuration.getThreads()).boxed()
-                    .map(i -> processPages(lock))
-                    .collect(Collectors.toList());
-            invokeAll(callable);
-        } else {
-            List<Callable<Integer>> callable = IntStream.range(0, configuration.getThreads()).boxed()
-                    .map(i -> processDataSet(configuration.getInputSource().readDataSet(describer)))
-                    .collect(Collectors.toList());
-            invokeAll(callable);
-        }
-    }
-
     private void invokeAll(List<Callable<Integer>> callable) {
         try {
             executors.invokeAll(callable)
                     .forEach(future -> {
                         try {
-                            logger.info(String.format("Processed %s pages.", future.get()));
+                            logger.info(String.format("Thread with id [%s] finished. Processed %s pages.", future.toString(), future.get()));
                         } catch (Exception e) {
                             logger.error("Exception getting future value.", e);
+                            if (Configuration.ValidationLevel.ERROR.equals(configuration.getLevel())) {
+                                logger.warn("Task finished with exception. Exiting.");
+                                System.exit(1);
+                            }
                         }
                     });
             executors.shutdown();
         } catch (InterruptedException e) {
             logger.error("Exception running anonymization task.", e);
+            if (Configuration.ValidationLevel.ERROR.equals(configuration.getLevel())) {
+                logger.warn("Task finished with exception. Exiting.");
+                System.exit(1);
+            }
         }
     }
 
     private Callable<Integer> processPages(final ReentrantLock lock) {
         return () -> {
-            int complete = -1;
+            int complete = 0;
             PagedDataSet dataSet;
             do {
                 lock.lock();
@@ -81,15 +74,17 @@ public class AnonymizationTask implements Runnable {
 
                 PagedDataSource dataSource = (PagedDataSource) configuration.getInputSource();
                 dataSet = dataSource.readPage(describer, offset, configuration.getPageSize());
+                List<EntityWrapper> processed = new ArrayList<>();
 
                 while (dataSet.hasNext()) {
                     EntityWrapper wrapper = dataSet.next();
                     AnonymizationService.anonymizeEntity(wrapper, configuration.getLocale(), configuration.getDictionaryPath(), configuration.getSecret(), configuration.getLevel(), null);
+                    processed.add(wrapper);
                 }
                 if (configuration.getInputSource().equals(configuration.getOutputSource())) {
-                    configuration.getInputSource().updateEntities(describer, dataSet);
+                    configuration.getInputSource().updateEntities(describer, new DataSetImpl(processed, describer));
                 } else {
-                    configuration.getOutputSource().saveEntities(describer, dataSet);
+                    configuration.getOutputSource().saveEntities(describer, new DataSetImpl(processed, describer));
                 }
                 complete++;
             } while (dataSet.hasNextPage());
@@ -112,5 +107,22 @@ public class AnonymizationTask implements Runnable {
             }
             return processed.size();
         };
+    }
+
+    @Override
+    public Long call() throws Exception {
+        long current = System.currentTimeMillis();
+        if (PagedDataSource.class.isAssignableFrom(configuration.getInputSource().getClass())) {
+            List<Callable<Integer>> callable = IntStream.range(0, configuration.getThreads()).boxed()
+                    .map(i -> processPages(lock))
+                    .collect(Collectors.toList());
+            invokeAll(callable);
+        } else {
+            List<Callable<Integer>> callable = IntStream.range(0, configuration.getThreads()).boxed()
+                    .map(i -> processDataSet(configuration.getInputSource().readDataSet(describer)))
+                    .collect(Collectors.toList());
+            invokeAll(callable);
+        }
+        return System.currentTimeMillis() - current;
     }
 }

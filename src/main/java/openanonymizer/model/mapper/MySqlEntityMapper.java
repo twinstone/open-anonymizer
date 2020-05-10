@@ -27,8 +27,10 @@ public class MySqlEntityMapper implements EntityWrapperMapper<ResultSet> {
             for (final FieldDescriber fieldDescriber : describer.getFields()) {
                 wrapper.insert(fieldDescriber.getName(), entity.getObject(fieldDescriber.getName()));
             }
-            for (final RelationFieldDescriber relationField : describer.getRelationFields()) {
-                wrapper.insert(relationField.getName(), entity.getObject(relationField.getName()));
+            if (describer.getRelationFields() != null) {
+                for (final RelationFieldDescriber relationField : describer.getRelationFields()) {
+                    wrapper.insert(relationField.getName(), entity.getObject(relationField.getName()));
+                }
             }
             return wrapper;
         } catch (SQLException e) {

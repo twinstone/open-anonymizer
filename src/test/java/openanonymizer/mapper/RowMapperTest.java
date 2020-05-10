@@ -37,28 +37,28 @@ public class RowMapperTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void emptyFieldsTest() {
-        mapper = new RowMapper(new String[0], null);
+        mapper = new RowMapper(new String[0], null, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void emptyFieldsTest2() {
-        mapper = new RowMapper(Collections.emptyList());
+        mapper = new RowMapper(Collections.emptyList(), null);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullDescriberTest() {
-        mapper = new RowMapper(new String[1], null);
+        mapper = new RowMapper(new String[1], null, null);
     }
 
     @Test(expected = MappingException.class)
     public void fromEntityTestWithEx() {
-        mapper = new RowMapper(new String[]{"name", "age"}, describer);
+        mapper = new RowMapper(new String[]{"name", "age"}, describer, null);
         mapper.getFromEntity(new String[]{"TestName"}, describer);
     }
 
     @Test
     public void fromEntityTest() {
-        mapper = new RowMapper(new String[]{"name", "age"}, describer);
+        mapper = new RowMapper(new String[]{"name", "age"}, describer, "");
         EntityWrapper wrapper = mapper.getFromEntity(new String[]{"TestName", "10"}, describer);
         Assert.assertEquals("TestName", wrapper.getValue("name"));
         Assert.assertEquals("10", wrapper.getValue("age"));
@@ -66,13 +66,13 @@ public class RowMapperTest {
 
     @Test(expected = MappingException.class)
     public void fromWrapperWithEx() {
-        mapper = new RowMapper(Collections.singletonList("first_name"));
+        mapper = new RowMapper(Collections.singletonList("first_name"), "");
         mapper.getFromWrapper(wrapper);
     }
 
     @Test
     public void fromWrapperTest() {
-        mapper = new RowMapper(new String[]{"name", "age"}, describer);
+        mapper = new RowMapper(new String[]{"name", "age"}, describer, "");
         String[] columns = mapper.getFromWrapper(wrapper);
         Assert.assertNotNull(columns);
         Assert.assertNotEquals(0, columns.length);

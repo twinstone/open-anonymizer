@@ -24,8 +24,10 @@ public class MongoEntityMapper implements EntityWrapperMapper<Document> {
         for (final FieldDescriber fieldDescriber : describer.getFields()) {
             wrapper.insert(fieldDescriber.getName(), entity.get(fieldDescriber.getName()));
         }
-        for (final RelationFieldDescriber relationField : describer.getRelationFields()) {
-            wrapper.insert(relationField.getName(), entity.get(relationField.getName()));
+        if (describer.getRelationFields() != null) {
+            for (final RelationFieldDescriber relationField : describer.getRelationFields()) {
+                wrapper.insert(relationField.getName(), entity.get(relationField.getName()));
+            }
         }
         return wrapper;
     }

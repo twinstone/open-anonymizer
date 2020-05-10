@@ -7,6 +7,7 @@ import openanonymizer.model.wrapper.EntityWrapper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 /**
@@ -26,8 +27,8 @@ public class MultiDictionaryAndPatternBasedAnonymizer extends TransformerBasedAn
     public void anonymize(EntityWrapper wrapper, FieldDescriber describer, Configuration configuration) throws Exception {
         String result = MultiDictionaryService.generate(getPattern(configuration),
                 configuration.getDictionaryPath(),
-                getDictionaryNames(configuration),
-                getPatterns(configuration),
+                getDictionaryNames(configuration).toArray(new String[0]),
+                getPatterns(configuration).toArray(new String[0]),
                 configuration.getLocale());
         if (StringUtils.isEmpty(result)) {
             result = getDefaultValue(configuration, describer);
@@ -41,12 +42,14 @@ public class MultiDictionaryAndPatternBasedAnonymizer extends TransformerBasedAn
         return String.valueOf(configuration.getParam(PATTERN));
     }
 
-    private String[] getDictionaryNames(Configuration configuration) {
-        return (String[]) Optional.ofNullable(configuration.getParam(DICTIONARIES)).orElse(null);
+    @SuppressWarnings("unchecked")
+    private ArrayList<String> getDictionaryNames(Configuration configuration) {
+        return (ArrayList<String>) Optional.ofNullable(configuration.getParam(DICTIONARIES)).orElse(null);
     }
 
-    private String[] getPatterns(Configuration configuration) {
-        return (String[]) Optional.ofNullable(configuration.getParam(PATTERNS)).orElse(null);
+    @SuppressWarnings("unchecked")
+    private ArrayList<String> getPatterns(Configuration configuration) {
+        return (ArrayList<String>) Optional.ofNullable(configuration.getParam(PATTERNS)).orElse(null);
     }
 
     private String getDefaultValue(Configuration configuration, FieldDescriber describer) {

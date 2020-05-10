@@ -52,7 +52,7 @@ public class SqlDumpDataSource implements DataSource {
                 Matcher lineMatcher = LINE_PATTERN.matcher(line);
                 if (lineMatcher.matches()) {
                     if (mapper == null) {
-                        mapper = new RowMapper(lineMatcher.group(2).split(SqlUtils.FIELD_VALUE_DELIMITER), describer);
+                        mapper = new RowMapper(lineMatcher.group(2).split(SqlUtils.FIELD_VALUE_DELIMITER), describer, "");
                     }
                     wrappers.add(mapper.getFromEntity(lineMatcher.group(3).split(SqlUtils.FIELD_VALUE_DELIMITER), describer));
                 }
@@ -74,7 +74,7 @@ public class SqlDumpDataSource implements DataSource {
             if (!file.exists()) file.createNewFile();
             long counter = 0;
             for (final EntityWrapper wrapper : dataSet) {
-                writer.append(SqlUtils.sqlInsertQuery(wrapper));
+                writer.append(SqlUtils.sqlInsertQuery(wrapper)).append("\n");
                 counter++;
             }
             logger.info(String.format("Wrote %d lines to file [%s].", counter, file.getAbsolutePath()));

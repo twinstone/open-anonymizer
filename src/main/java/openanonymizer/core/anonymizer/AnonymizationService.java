@@ -45,6 +45,10 @@ public final class AnonymizationService {
         Validate.notNull(entity, "Entity must be not null.");
         Validate.notNull(validationLevel, "Validation level must be not null");
         for (final FieldDescriber describer : entity.describeEntity().getFields()) {
+            if (describer.getConfiguration() == null) {
+                logger.info(String.format("Anonymization configuration for field [%s] in entity [%s] is not present. Skipping.", describer.getName(), entity.describeEntity().getName()));
+                continue;
+            }
             anonymizeField(entity, describer, locale, dictPath, secret, validationLevel, loader);
         }
         return entity;

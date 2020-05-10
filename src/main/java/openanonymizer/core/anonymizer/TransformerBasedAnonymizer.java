@@ -20,12 +20,12 @@ public class TransformerBasedAnonymizer {
      * @param configuration anonymization process configuration
      * @return instance of {@link Transformer} or {@link DefaultTransformer} if configuration is empty.
      */
-    Transformer getTransformer(Configuration configuration) throws Exception {
+    Transformer<?> getTransformer(Configuration configuration) throws Exception {
         String transformer = String.valueOf(configuration.getParam(TRANSFORMER));
         if (StringUtils.isNotEmpty(transformer)) {
-            Class clazz = Class.forName(transformer);
+            Class<?> clazz = Class.forName(transformer);
             if (Transformer.class.isAssignableFrom(clazz)) {
-                return (Transformer) clazz.newInstance();
+                return (Transformer<?>) clazz.newInstance();
             }
         }
         return new DefaultTransformer();

@@ -39,49 +39,6 @@ dependencies {
     testCompile group: 'org.powermock', name: 'powermock-api-mockito2', version: '2.0.0'
 }
 
-task javadocJar(type: Jar) {
-    classifier = 'javadoc'
-    from javadoc
-}
-
-task sourcesJar(type: Jar) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
 test {
     jvmArgs "-XX:+UnlockExperimentalVMOptions", "-XX:+UseCGroupMemoryLimitForHeap"
-}
-
-uploadArchives {
-    repositories {
-        mavenDeployer {
-
-            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
-            }
-
-            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
-            }
-
-            pom.project {
-                name 'Open Anonymizer'
-                packaging 'jar'
-
-                licenses {
-                    license {
-                        name 'MIT License'
-                    }
-                }
-
-                developers {
-                    developer {
-                        id 'ochmel'
-                        name 'Oleksandr Chmel'
-                    }
-                }
-            }
-        }
-    }
 }

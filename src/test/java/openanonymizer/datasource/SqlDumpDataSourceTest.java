@@ -19,6 +19,9 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Objects;
 
+/**
+ * Tests sql file datasource.
+ */
 public class SqlDumpDataSourceTest {
 
     private final static String DIR = "src/test/resources";

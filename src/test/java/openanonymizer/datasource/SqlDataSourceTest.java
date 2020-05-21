@@ -26,6 +26,9 @@ import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.anyString;
 
+/**
+ * Tests sql database datasource.
+ */
 public class SqlDataSourceTest {
 
     private EntityWrapper wrapper;

@@ -5,22 +5,20 @@ import openanonymizer.model.describer.EntityDescriber;
 import openanonymizer.model.describer.RelationEntityDescriber;
 import openanonymizer.model.mapper.EntityMappers;
 
-import java.io.Closeable;
-
 /**
  * This interface allows basic read, save and update operation on specific data source.
  *
  * @version 0.1
  * @since Open Anonymizer 1.0.0
  */
-public interface DataSource extends Closeable {
+public interface DataSource extends AutoCloseable {
 
     /**
      * Read {@link DataSet} from data source.
      *
      * @param describer entity structure
      * @return the data set
-     * */
+     */
     DataSet readDataSet(EntityDescriber describer);
 
     /**

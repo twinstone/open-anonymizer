@@ -24,6 +24,9 @@ import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.*;
 
+/**
+ * Test neo4j database datasource.
+ */
 public class Neo4jDataSourceTest {
 
     private EntityWrapper wrapper;

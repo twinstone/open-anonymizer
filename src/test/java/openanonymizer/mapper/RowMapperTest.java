@@ -15,6 +15,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Contains tests for {@link RowMapper} class. In this test we expect correct reaction
+ * of mapper while mapping CSV and SQL file entities to {@link EntityWrapper}.
+ */
 public class RowMapperTest {
 
     private RowMapper mapper;

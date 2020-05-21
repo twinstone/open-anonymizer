@@ -24,6 +24,9 @@ import java.util.*;
 
 import static org.mockito.ArgumentMatchers.*;
 
+/**
+ * Tests mongodb database datasource.
+ */
 public class MongoDataSourceTest {
 
     private EntityWrapper wrapper;

@@ -12,6 +12,9 @@ import org.junit.Test;
 
 import java.util.Locale;
 
+/**
+ * Test for {@link ConfigurationValidator}. Tests if loaded configuration is valid or no.
+ */
 public class ConfigurationValidatorTest {
 
     private static final String DIR = "src/test/resources";

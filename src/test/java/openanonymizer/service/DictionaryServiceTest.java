@@ -9,6 +9,9 @@ import org.junit.Test;
 import java.util.Locale;
 import java.util.Optional;
 
+/**
+ * Test for {@link DictionaryService}. Tests if dictionaries in default and another locales are loaded correctly.
+ */
 public class DictionaryServiceTest {
 
     private final static String DIR = "src/test/resources";

@@ -9,6 +9,9 @@ import org.junit.Test;
 
 import java.util.Optional;
 
+/**
+ * Test for {@link TransformationStorage}. Tests possibility of storing transformed field values.
+ */
 public class TransformationStorageTest {
 
     @Before
@@ -64,8 +67,8 @@ public class TransformationStorageTest {
     public void storageTest2() {
         TransformationStorage.insertValue("test1", 1, 100);
         TransformationStorage.insertValue("test1", 2, 200);
-        Optional<Pair> pair1 = TransformationStorage.findByLeft("test1", 1);
-        Optional<Pair> pair2 = TransformationStorage.findByLeft("test1", 2);
+        Optional<Pair<?, ?>> pair1 = TransformationStorage.findByLeft("test1", 1);
+        Optional<Pair<?, ?>> pair2 = TransformationStorage.findByLeft("test1", 2);
         Assert.assertEquals(100, pair1.get().getRight());
         Assert.assertEquals(200, pair2.get().getRight());
         TransformationStorage.clearSource("test1");

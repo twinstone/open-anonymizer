@@ -5,9 +5,10 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.Validate;
 
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,7 +33,7 @@ import java.util.regex.Pattern;
 public final class RandomSequenceGenerator {
 
     private static final Pattern SEQUENCE_CONFIG = Pattern.compile("[adDwW]\\{(\\d+)-(\\d+)}");
-    private static final Map<String, Set<String>> storage = new HashMap<>();
+    private static final Map<String, Set<String>> storage = new ConcurrentHashMap<>();
 
     /**
      * Generates random values.
@@ -72,7 +73,7 @@ public final class RandomSequenceGenerator {
             }
             memoryStore.add(result);
         } else {
-            storage.put(pattern, Sets.newHashSet(result));
+            storage.put(pattern, Sets.newConcurrentHashSet(Collections.singletonList(result)));
         }
         return result;
     }

@@ -7,6 +7,9 @@ import org.junit.Test;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Test for {@link RandomSequenceGenerator}. Also tests unique value generation which must be valid for application scope.
+ */
 public class RandomSequenceGeneratorTest {
 
     @Test(expected = NullPointerException.class)

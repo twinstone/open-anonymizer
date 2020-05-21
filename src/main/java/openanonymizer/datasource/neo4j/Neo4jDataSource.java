@@ -106,8 +106,8 @@ public class Neo4jDataSource implements DataSource, PagedDataSource {
         Transaction transaction = session.beginTransaction();
         try {
             for (final EntityWrapper wrapper : dataSet) {
-                Optional<Pair> pairLeft = TransformationStorage.findByLeft(describer.getLeft().getParentSource(), wrapper.getValue(describer.getLeft().getName()));
-                Optional<Pair> pairRight = TransformationStorage.findByLeft(describer.getRight().getParentSource(), wrapper.getValue(describer.getRight().getName()));
+                Optional<Pair<?, ?>> pairLeft = TransformationStorage.findByLeft(describer.getLeft().getParentSource(), wrapper.getValue(describer.getLeft().getName()));
+                Optional<Pair<?, ?>> pairRight = TransformationStorage.findByLeft(describer.getRight().getParentSource(), wrapper.getValue(describer.getRight().getName()));
                 if (pairLeft.isPresent() && pairRight.isPresent()) {
                     EntityDescriber left = new EntityDescriber();
                     left.setSource(describer.getLeft().getParentSource());
@@ -163,7 +163,7 @@ public class Neo4jDataSource implements DataSource, PagedDataSource {
                 r.setSource(relation.getTargetSource());
                 r.setName(relation.getName());
                 try {
-                    Optional<Pair> pair = TransformationStorage.findByLeft(relation.getTargetSource(), wrapper.getValue(relation.getName()));
+                    Optional<Pair<?, ?>> pair = TransformationStorage.findByLeft(relation.getTargetSource(), wrapper.getValue(relation.getName()));
                     if (pair.isPresent()) {
                         current.run(Neo4jUtils.relationCreateQuery(describer, r, leftId, pair.get().getRight(), relation.getName()));
                         logger.info(String.format("Created new relation [%s]-(%s)->[%s].", describer.getSource(), relation.getName(), r.getSource()));

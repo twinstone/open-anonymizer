@@ -19,6 +19,9 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Objects;
 
+/**
+ *
+ */
 public class CsvDataSourceTest {
 
     private final static String DIR = "src/test/resources";
@@ -50,18 +53,18 @@ public class CsvDataSourceTest {
 
     @Test(expected = NullPointerException.class)
     public void nullTest() {
-        new CsvDataSource(null, ',', 0);
+        new CsvDataSource(null, ',', 0, null);
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void unsupportedOperation() {
-        DataSource dataSource = new CsvDataSource(new File(DIR), ',', 0);
+        DataSource dataSource = new CsvDataSource(new File(DIR), ',', 0, null);
         dataSource.updateEntities(null, null);
     }
 
     @Test
     public void readDataSet() {
-        CsvDataSource dataSource = new CsvDataSource(new File(DIR), ',', 1);
+        CsvDataSource dataSource = new CsvDataSource(new File(DIR), ',', 1, null);
         DataSet dataSet = dataSource.readDataSet(describer);
         Assert.assertNotNull(dataSet);
         Assert.assertEquals(10L, dataSet.size());
@@ -69,7 +72,7 @@ public class CsvDataSourceTest {
 
     @Test
     public void saveDataSet() throws IOException {
-        try (CsvDataSource dataSource = new CsvDataSource(new File(DIR), ',', 1)) {
+        try (CsvDataSource dataSource = new CsvDataSource(new File(DIR), ',', 1, null)) {
             dataSource.saveEntities(simple, new DataSetImpl(Collections.singletonList(wrapper), simple));
             DataSet dataSet = dataSource.readDataSet(simple);
             Assert.assertEquals(1, dataSet.size());

@@ -5,6 +5,9 @@ import openanonymizer.core.stage.Stage;
 
 import java.util.Locale;
 
+/**
+ * Simple test stage class. No functionality expected.
+ */
 public class SimpleTestStage implements Stage {
     @Override
     public void executeStage(ApplicationConfiguration configuration) {

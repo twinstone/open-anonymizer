@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public final class TransformationStorage {
 
     private static final Logger logger = Logger.getLogger(TransformationStorage.class);
-    private static final Map<String, Queue<Pair>> pairStorage = new ConcurrentHashMap<>();
+    private static final Map<String, Queue<Pair<?, ?>>> pairStorage = new ConcurrentHashMap<>();
 
     /**
      * Allows to insert a new value into transformation storage.
@@ -43,9 +43,7 @@ public final class TransformationStorage {
         Validate.notNull(leftValue, "Left value must be not null.");
         Validate.notNull(rightValue, "Right value must be not null.");
         Pair<L, R> pair = Pair.of(leftValue, rightValue);
-        if (!pairStorage.containsKey(source)) {
-            pairStorage.put(source, new ConcurrentLinkedQueue<>());
-        }
+        pairStorage.putIfAbsent(source, new ConcurrentLinkedQueue<>());
         pairStorage.get(source).add(pair);
         logger.info(String.format("Added new transformation for source [%s]: %s -> %s", source, leftValue, rightValue));
     }
@@ -59,10 +57,10 @@ public final class TransformationStorage {
      * @param left   left value we lookup in transformations list
      * @return {@link Optional}. It is empty when transformation not found.
      */
-    public static <L> Optional<Pair> findByLeft(final String source, final L left) {
+    public static <L> Optional<Pair<?, ?>> findByLeft(final String source, final L left) {
         Validate.notNull(source, "Source must be not null.");
         Validate.notNull(left, "Left value must be not null.");
-        Queue<Pair> list = pairStorage.get(source);
+        Queue<Pair<?, ?>> list = pairStorage.get(source);
         if (list != null) {
             return list.stream().filter(pair -> pair.getLeft().equals(left)).findFirst();
         } else {

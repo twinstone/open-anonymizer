@@ -10,6 +10,9 @@ import org.junit.Test;
 
 import java.net.URL;
 
+/**
+ * Tests configuration loading from file. Test file iss located in resources directory.
+ */
 public class ConfigurationLoaderTest {
 
     private final static URL PATH = ConfigurationLoaderTest.class.getClassLoader().getResource("config.json");

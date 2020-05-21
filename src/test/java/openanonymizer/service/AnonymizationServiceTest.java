@@ -16,6 +16,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Test for {@link AnonymizationService}. Also tests runtime anonymization class initialization.
+ */
 public class AnonymizationServiceTest {
 
     private EntityWrapper wrapper;

@@ -27,6 +27,9 @@ import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.anyInt;
 
+/**
+ * Contains tests for {@link MongoEntityMapper}, {@link MySqlEntityMapper} and {@link Neo4jEntityMapper}
+ */
 public class DbMappersTest {
 
     private static final MySqlEntityMapper sqlMapper = new MySqlEntityMapper();

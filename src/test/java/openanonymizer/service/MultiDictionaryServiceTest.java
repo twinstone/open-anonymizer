@@ -8,6 +8,9 @@ import org.junit.Test;
 
 import java.util.Locale;
 
+/**
+ * Test {@link MultiDictionaryService}. Tests random value generation, combining dictionary value(s) and random sequence(s).
+ */
 public class MultiDictionaryServiceTest {
 
     private final static String DIR = "src/test/resources";

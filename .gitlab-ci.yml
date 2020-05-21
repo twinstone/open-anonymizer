@@ -25,4 +25,4 @@ build:
 test:
   stage: test
   script:
-    - ./gradlew check
+    - ./gradlew test --no-daemon

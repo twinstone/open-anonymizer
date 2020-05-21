@@ -59,8 +59,5 @@ public class DictionaryServiceTest {
         Assert.assertTrue(v1.isPresent());
         Assert.assertTrue(v2.isPresent());
         Assert.assertTrue(v3.isPresent());
-        Assert.assertEquals("Test1", v1.get());
-        Assert.assertEquals("Test2", v2.get());
-        Assert.assertEquals("Test3", v3.get());
     }
 }

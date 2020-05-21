@@ -68,7 +68,7 @@ public class MongoDataSourceTest {
             wrapper.insert("updatedValue", "test");
             return null;
         }).when(collection).updateOne(isA(Bson.class), isA(Bson.class));
-        PowerMockito.when(database.getCollection(anyString())).thenReturn(collection);
+        PowerMockito.when(database.getCollection(anyString(), eq(Document.class))).thenReturn(collection);
     }
 
     @Test(expected = UnsupportedOperationException.class)

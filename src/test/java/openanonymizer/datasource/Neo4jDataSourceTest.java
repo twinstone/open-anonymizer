@@ -63,7 +63,7 @@ public class Neo4jDataSourceTest {
         PowerMockito.when(result.single()).thenReturn(record);
         PowerMockito.when(result.list(any())).thenReturn(Collections.singletonList(wrapper));
         PowerMockito.when(session.run(anyString())).thenReturn(result);
-        PowerMockito.when(transaction.run(anyString(), anyMap())).thenReturn(result);
+        PowerMockito.when(session.run(anyString(), anyMap())).thenReturn(result);
         PowerMockito.when(session.beginTransaction()).thenReturn(transaction);
         PowerMockito.when(driver.session()).thenReturn(session);
     }

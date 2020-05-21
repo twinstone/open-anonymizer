@@ -42,7 +42,7 @@ public class MongoDataSource implements DataSource, PagedDataSource {
     public DataSet readDataSet(EntityDescriber describer) {
         Validate.notNull(describer, "Describer must be not null.");
         try {
-            MongoCollection<Document> collection = database.getCollection(describer.getSource());
+            MongoCollection<Document> collection = database.getCollection(describer.getSource(), Document.class);
             Validate.notNull(collection, "Collection does not exist.");
             List<EntityWrapper> wrappers = StreamSupport
                     .stream(collection.find().spliterator(), false)
@@ -76,7 +76,7 @@ public class MongoDataSource implements DataSource, PagedDataSource {
     public void updateEntities(EntityDescriber describer, DataSet dataSet) {
         Validate.notNull(describer, "Describer must be not null.");
         Validate.notNull(dataSet, "Data set must be nit null.");
-        MongoCollection<Document> collection = database.getCollection(describer.getSource());
+        MongoCollection<Document> collection = database.getCollection(describer.getSource(), Document.class);
         try {
             long counter = 0;
             for (final EntityWrapper wrapper : dataSet) {
@@ -99,7 +99,7 @@ public class MongoDataSource implements DataSource, PagedDataSource {
     public PagedDataSet readPage(EntityDescriber describer, long offset, int limit) {
         Validate.notNull(describer, "Describer must be not null.");
         try {
-            MongoCollection<Document> collection = database.getCollection(describer.getSource());
+            MongoCollection<Document> collection = database.getCollection(describer.getSource(), Document.class);
             Validate.notNull(collection, "Collection does not exist.");
             List<EntityWrapper> wrappers = StreamSupport
                     .stream(collection.find().spliterator(), false)
@@ -119,7 +119,7 @@ public class MongoDataSource implements DataSource, PagedDataSource {
     public long getTotalItemsCount(EntityDescriber describer) {
         Validate.notNull(describer, "Describer must be not null.");
         try {
-            MongoCollection<Document> collection = database.getCollection(describer.getSource());
+            MongoCollection<Document> collection = database.getCollection(describer.getSource(), Document.class);
             Validate.notNull(collection, "Collection does not exist.");
             return collection.countDocuments();
         } catch (MongoException e) {

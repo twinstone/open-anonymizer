@@ -53,18 +53,18 @@ public class CsvDataSourceTest {
 
     @Test(expected = NullPointerException.class)
     public void nullTest() {
-        new CsvDataSource(null, ',', 0, null);
+        new CsvDataSource(null, ',', 0, "null");
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void unsupportedOperation() {
-        DataSource dataSource = new CsvDataSource(new File(DIR), ',', 0, null);
+        DataSource dataSource = new CsvDataSource(new File(DIR), ',', 0, "null");
         dataSource.updateEntities(null, null);
     }
 
     @Test
     public void readDataSet() {
-        CsvDataSource dataSource = new CsvDataSource(new File(DIR), ',', 1, null);
+        CsvDataSource dataSource = new CsvDataSource(new File(DIR), ',', 1, "null");
         DataSet dataSet = dataSource.readDataSet(describer);
         Assert.assertNotNull(dataSet);
         Assert.assertEquals(10L, dataSet.size());
@@ -72,7 +72,7 @@ public class CsvDataSourceTest {
 
     @Test
     public void saveDataSet() throws IOException {
-        try (CsvDataSource dataSource = new CsvDataSource(new File(DIR), ',', 1, null)) {
+        try (CsvDataSource dataSource = new CsvDataSource(new File(DIR), ',', 1, "null")) {
             dataSource.saveEntities(simple, new DataSetImpl(Collections.singletonList(wrapper), simple));
             DataSet dataSet = dataSource.readDataSet(simple);
             Assert.assertEquals(1, dataSet.size());

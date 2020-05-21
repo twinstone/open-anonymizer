@@ -52,7 +52,7 @@ public class SqlDumpDataSource implements DataSource {
                 Matcher lineMatcher = LINE_PATTERN.matcher(line);
                 if (lineMatcher.matches()) {
                     if (mapper == null) {
-                        mapper = new RowMapper(lineMatcher.group(2).split(SqlUtils.FIELD_VALUE_DELIMITER), describer, "");
+                        mapper = new RowMapper(lineMatcher.group(2).split(SqlUtils.FIELD_VALUE_DELIMITER), describer, "NULL");
                     }
                     wrappers.add(mapper.getFromEntity(lineMatcher.group(3).split(SqlUtils.FIELD_VALUE_DELIMITER), describer));
                 }

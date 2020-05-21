@@ -56,13 +56,13 @@ public class RowMapperTest {
 
     @Test(expected = MappingException.class)
     public void fromEntityTestWithEx() {
-        mapper = new RowMapper(new String[]{"name", "age"}, describer, null);
+        mapper = new RowMapper(new String[]{"name", "age"}, describer, "NULL");
         mapper.getFromEntity(new String[]{"TestName"}, describer);
     }
 
     @Test
     public void fromEntityTest() {
-        mapper = new RowMapper(new String[]{"name", "age"}, describer, "");
+        mapper = new RowMapper(new String[]{"name", "age"}, describer, "NULL");
         EntityWrapper wrapper = mapper.getFromEntity(new String[]{"TestName", "10"}, describer);
         Assert.assertEquals("TestName", wrapper.getValue("name"));
         Assert.assertEquals("10", wrapper.getValue("age"));
@@ -70,13 +70,13 @@ public class RowMapperTest {
 
     @Test(expected = MappingException.class)
     public void fromWrapperWithEx() {
-        mapper = new RowMapper(Collections.singletonList("first_name"), "");
+        mapper = new RowMapper(Collections.singletonList("first_name"), "NULL");
         mapper.getFromWrapper(wrapper);
     }
 
     @Test
     public void fromWrapperTest() {
-        mapper = new RowMapper(new String[]{"name", "age"}, describer, "");
+        mapper = new RowMapper(new String[]{"name", "age"}, describer, "NULL");
         String[] columns = mapper.getFromWrapper(wrapper);
         Assert.assertNotNull(columns);
         Assert.assertNotEquals(0, columns.length);

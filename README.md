@@ -1,5 +1,8 @@
 # open anonymizer
 
+[![MIT License](https://img.shields.io/apm/l/atomic-design-ui.svg?)](https://opensource.org/licenses/MIT)
+[![GitHub Release](https://img.shields.io/badge/version-v1.0.0-blue)]() 
+
 ## Features
 <ul> 
 <li>Easy to configure</li>
@@ -13,7 +16,6 @@
 </ul>
  </li>
 <li>Dynamic anonymization class configuration. See <a href="/#anon">Anonymization classes</a></li>
-<li>Available as jar at Maven Central</li>
 </ul>
 
 ## Open Source
